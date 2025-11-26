@@ -1,0 +1,56 @@
+John Reyna
+Orlando, FL 32837
+(689) 319-2244 | john.rear@gmail.com | linkedin.com/in/johnreyna
+US Permanent Resident (Green card holder)
+
+PROFESSIONAL SUMMARY
+Senior E-commerce Architect & Technical Lead with proven expertise in modernizing fragmented legacy systems, architecting scalable e-commerce solutions, and leading distributed teams. Core strength: balancing technical vision with business priorities and rapidly adopting new platforms.
+
+KEY SKILLS
+Web & CMS Development: WordPress Core, HTML, CSS, JavaScript, PHP, MySQL, REST APIs, GraphQL, Headless WordPress (Gatsby.js), Performance Optimization, Caching/CDN (Cloudflare), Shopify
+Data Analysis: Data Modeling, Business Intelligence, Data Collection, Data-Driven Solutions.
+Marketing & E-commerce: SEO, Google Merchant Center, Analytics, Ads, Tag Manager, WooCommerce.
+Project Management: Agile Methodologies (Scrum, Kanban), Jira.
+Cloud & Infrastructure: AWS, LiquidWeb, Flywheel, Virtual Servers.
+Performance & SEO: Core Web Vitals, SEO Optimization, A/B Testing, Analytics, Conversion Rate Optimization (CRO)
+
+PROFESSIONAL EXPERIENCE
+
+Senior E-commerce & Web Solutions Consultant | Self-Employed (Remote)
+Clients: 201 Digital Group & NFSports | Oct 2025 – Present
+* Providing high-level technical consulting for digital agencies and e-commerce brands, focusing on platform stability, security, and operational continuity.
+* Primary technical escalation point for agency clients (201dg.com) for malware remediation, PHP migrations, and rapid-response troubleshooting.
+* Delivered comprehensive support for high-traffic Shopify platforms, troubleshooting payment gateway integrations and implementing UI/UX enhancements.
+
+Technologies Platform Manager (Remote)
+USA Tile & Marble | Miami, FL | Jan 2021 – Jul 2025
+* Led the development of three new eCommerce websites (WooCommerce), achieving a 124% increase in online sales and a 15% improvement in efficiency.
+* Architected a centralized product database ("Rosetta Stone") to unify inconsistent legacy data.
+* Orchestrated the AWS migration initiative and seamless integration of Google Tag Manager, Analytics, and Merchant Center.
+* Executed a centralized keyword strategy, accelerating organic search traffic by 20%.
+* Launched strategic product feed management plans, generating a 10% increase in online revenue.
+
+WordPress Lead Developer (Remote)
+Chicago Code Monkeys | Chicago, IL | Jan 2013 – Dec 2022
+* Managed a remote development team based in South America, leading WordPress and WooCommerce projects.
+* Directed project timelines and resources using Jira and Kanban boards.
+* Architected and implemented custom code, plugins, and themes to resolve complex development challenges.
+
+WordPress Project Leader (Remote)
+SiteToWordPress | Chicago, IL | Jan 2017 – Dec 2020
+* Led the migration and development of WordPress and WooCommerce websites.
+* Pioneered a lead generation strategy using Gravity Forms and Zoho CRM, increasing user registrations by 15%.
+* Orchestrated the automation of the service contracting process, boosting client acquisition and efficiency by 20%.
+
+Email Campaign Manager (Remote)
+STEdb Tech | Royal Palm Beach, FL | Aug 2006 – Aug 2014
+* Managed a team of campaign builders and administered proprietary DBM systems to ensure high deliverability.
+
+EDUCATION
+Google Professional Certificates, 2025: Project Management | Digital Marketing & E-commerce | AI Essentials | Introduction to AI
+Harvard University, 2024: CS50: Introduction to Computer Science Course
+Instituto Leonardo Da Vinci, Peru, 2006: Technical Professional in Computer & Information Technology
+
+VOLUNTEERING
+Multimedia & Tech Team Member | Focal Point Church, Orlando FL | Sept 2025 – Present
+* Provide technical support for live Sunday services and monitor website performance.
