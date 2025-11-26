@@ -51,7 +51,7 @@ export default function Home() {
         <img 
             src="/john-reyna.webp" // Ruta desde la carpeta 'public'
             alt="John Reyna Profile" 
-            className="w-60 h-60 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" // Clases Tailwind
+            className="w-50 h-50 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" // Clases Tailwind
         />
         {/* FIN NUEVO */}
 
@@ -77,7 +77,7 @@ export default function Home() {
         
         <input 
           type="text" 
-          placeholder="Ex: What was the sales increase at USA Tile & Marble?"
+          placeholder="Ex: Why should I hire John?"
           className="w-full p-3 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
           value={question} // Conectamos el input con la variable de estado 'question'
           onChange={(e) => setQuestion(e.target.value)} // Guardamos lo que escribe el usuario
