@@ -47,9 +47,23 @@ export default function Home() {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-50 p-6">
       
+      {/* NUEVO: Contenedor para la imagen */}
+        <img 
+            src="/john-reyna.webp" // Ruta desde la carpeta 'public'
+            alt="John Reyna Profile" 
+            className="w-60 h-60 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" // Clases Tailwind
+        />
+        {/* FIN NUEVO */}
+
+
       {/* Tu Encabezado Profesional */}
       <h1 className="text-5xl font-extrabold text-gray-900 mb-4 text-center">
-        John Reyna: <span className="text-blue-600">Senior E-commerce Architect</span>
+        John Reyna
+      </h1>
+
+      {/* Tu Encabezado Profesional */}
+      <h1 className="text-5xl font-extrabold text-gray-900 mb-4 text-center">
+        <span className="text-blue-600">Senior E-commerce Architect</span>
       </h1>
 
       {/* Resumen */}
