@@ -17,8 +17,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "John Reyna | Full-Stack AI Architect Portfolio",
-  description: "Full-Stack Portfolio showcasing RAG AI Integration, Next.js architecture, and E-commerce expertise.",
+  title: "John Reyna | Digital Platform Architect",
+  description: "Strategic Leader specializing in Headless Architecture (Next.js/AI), Legacy System Modernization, and driving growth through technical performance.",
 };
 
 export default function RootLayout({

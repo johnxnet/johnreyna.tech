@@ -1,56 +1,75 @@
-John Reyna
-Orlando, FL 32837
-(689) 319-2244 | john.rear@gmail.com | linkedin.com/in/johnreyna
-US Permanent Resident (Green card holder)
+JOHN REYNA
+Location: Orlando, FL 32837
+Telephone: (689) 319-2244
+Email: john.rear@gmail.com
+Web: https://johnreyna.tech
+GitHub: https://github.com/johnxnet
 
 PROFESSIONAL SUMMARY
-Senior E-commerce Architect & Technical Lead with proven expertise in modernizing fragmented legacy systems, architecting scalable e-commerce solutions, and leading distributed teams. Core strength: balancing technical vision with business priorities and rapidly adopting new platforms.
+Digital Platform Architect with proven experience in modernizing complex WordPress and PHP-based systems along with theme/plugin customization, and data management. Demonstrated ability to rapidly adapt and deploy cutting-edge Full-Stack technologies (Next.js, RAG/AI), architecting scalable digital solutions. Adept at CI/CD pipeline maintenance, environment variable management, and resolving critical production vulnerabilities (e.g., Next.js dependencies) to ensure operational continuity and security.
 
 KEY SKILLS
-Web & CMS Development: WordPress Core, HTML, CSS, JavaScript, PHP, MySQL, REST APIs, GraphQL, Headless WordPress (Gatsby.js), Performance Optimization, Caching/CDN (Cloudflare), Shopify
-Data Analysis: Data Modeling, Business Intelligence, Data Collection, Data-Driven Solutions.
-Marketing & E-commerce: SEO, Google Merchant Center, Analytics, Ads, Tag Manager, WooCommerce.
-Project Management: Agile Methodologies (Scrum, Kanban), Jira.
-Cloud & Infrastructure: AWS, LiquidWeb, Flywheel, Virtual Servers.
-Performance & SEO: Core Web Vitals, SEO Optimization, A/B Testing, Analytics, Conversion Rate Optimization (CRO)
+- Web & CMS Development: WordPress (Core, Headless/Next.js), PHP, MySQL, REST/GraphQL APIs, Full-Stack (TypeScript, Tailwind CSS), Shopify, Caching/CDN.
+- Data Analysis: Data Modeling, BI, Collection, Data-Driven Solutions.
+- Marketing & E-commerce: SEO, Google Merchant Center, GA4 Integration (Next.js), Tag Manager, WooCommerce.
+- Project Management: Agile Methodologies (Scrum, Kanban), Jira, Version Control (Git), CI/CD Pipeline Maintenance (GitHub/Vercel).
+- Cloud & Infrastructure: AWS, LiquidWeb/Flywheel, Virtual Servers, Serverless (Vercel).
+- Performance & SEO: Core Web Vitals, SEO Optimization, A/B Testing, Dependency Management, Analytics, Conversion Rate Optimization (CRO).
+- Artificial Intelligence (AI): RAG Architecture, Gemini API (2.5 Flash), LangChain Expression Language (LCEL), Custom Vector Store Development.
 
 PROFESSIONAL EXPERIENCE
 
 Senior E-commerce & Web Solutions Consultant | Self-Employed (Remote)
-Clients: 201 Digital Group & NFSports | Oct 2025 – Present
-* Providing high-level technical consulting for digital agencies and e-commerce brands, focusing on platform stability, security, and operational continuity.
-* Primary technical escalation point for agency clients (201dg.com) for malware remediation, PHP migrations, and rapid-response troubleshooting.
-* Delivered comprehensive support for high-traffic Shopify platforms, troubleshooting payment gateway integrations and implementing UI/UX enhancements.
+Clients include 201 Digital Group & NFSports | Oct 2025 - Present
+- Providing high-level technical consulting for agencies, focusing on platform stability and operational continuity.
+- WordPress Strategy & Tech Support: Primary technical escalation points for critical issues like managed malware remediation, server upgrades (PHP migrations), and rapid-response troubleshooting for complex WordPress errors.
+- Shopify & E-commerce Operations: Troubleshooted payment gateways, implemented UI/UX enhancements, and resolved front-end friction points to optimize the checkout experience.
+
+Technical Innovation & Architecture (Personal Project: JohnReyna.tech)
+- Architected and launched a Full-Stack application using Next.js, TypeScript, and Tailwind CSS, demonstrating proficiency in modern frontend frameworks and mobile-specific UX optimization.
+- Pioneered AI integration by implementing a complex RAG (Retrieval-Augmented Generation) architecture, orchestrating the data chain using LangChain Expression Language (LCEL), and connecting to the Gemini 2.5 Flash model for conversational functionality.
+- Resolved critical data portability issues by developing a Custom Simple Memory Vector Store in pure TypeScript, validating advanced problem-solving skills and clean coding practices.
+- Established a secure, production-ready CI/CD workflow (GitHub to Vercel) and implemented Serverless security protocols to protect API keys in the production environment.
 
 Technologies Platform Manager (Remote)
-USA Tile & Marble | Miami, FL | Jan 2021 – Jul 2025
-* Led the development of three new eCommerce websites (WooCommerce), achieving a 124% increase in online sales and a 15% improvement in efficiency.
-* Architected a centralized product database ("Rosetta Stone") to unify inconsistent legacy data.
-* Orchestrated the AWS migration initiative and seamless integration of Google Tag Manager, Analytics, and Merchant Center.
-* Executed a centralized keyword strategy, accelerating organic search traffic by 20%.
-* Launched strategic product feed management plans, generating a 10% increase in online revenue.
+USA Tile & Marble | Miami, FL | Jan 2021 - Jul 2025
+- Developed three new eCommerce sites (WooCommerce), boosting online sales by 124% and improving efficiency by 15%.
+- Architected a centralized product database ("Rosetta Stone") to unify inconsistent legacy data and customized the WooCommerce core structure to meet complex business requirements.
+- Orchestrated the AWS migration initiative and seamless integration of key platforms (Google Tag Manager, Analytics, Merchant Center) to ensure scalability and accurate data flow.
+- Elevated UX via centralized keyword strategy and content audits, accelerating organic search traffic by 20%.
+- Developed and launched strategic product feed management plans and targeted Google Shopping campaigns, generating a 10% increase in online revenue.
 
 WordPress Lead Developer (Remote)
-Chicago Code Monkeys | Chicago, IL | Jan 2013 – Dec 2022
-* Managed a remote development team based in South America, leading WordPress and WooCommerce projects.
-* Directed project timelines and resources using Jira and Kanban boards.
-* Architected and implemented custom code, plugins, and themes to resolve complex development challenges.
+Chicago Code Monkeys | Chicago, IL | Jan 2013 - Dec 2022
+- Managed a remote development team based in South America, leading the execution of various WordPress projects.
+- Directed project timelines and resources using Jira and Kanban boards, streamlining workflows to ensure on-time delivery.
+- Architected and implemented custom code, plugins, and themes to resolve complex development challenges.
 
 WordPress Project Leader (Remote)
-SiteToWordPress | Chicago, IL | Jan 2017 – Dec 2020
-* Led the migration and development of WordPress and WooCommerce websites.
-* Pioneered a lead generation strategy using Gravity Forms and Zoho CRM, increasing user registrations by 15%.
-* Orchestrated the automation of the service contracting process, boosting client acquisition and efficiency by 20%.
-
-Email Campaign Manager (Remote)
-STEdb Tech | Royal Palm Beach, FL | Aug 2006 – Aug 2014
-* Managed a team of campaign builders and administered proprietary DBM systems to ensure high deliverability.
+SiteToWordPress | Chicago, IL | Jan 2017 - Dec 2020
+- Led the migration and development of WordPress and WooCommerce websites to modernize outdated online presence.
+- Pioneered a lead generation strategy using Gravity Forms and Zoho CRM, increasing user registrations by 15%.
+- Orchestrated the automation of the service contracting process, boosting client acquisition and efficiency by 20%.
 
 EDUCATION
-Google Professional Certificates, 2025: Project Management | Digital Marketing & E-commerce | AI Essentials | Introduction to AI
-Harvard University, 2024: CS50: Introduction to Computer Science Course
-Instituto Leonardo Da Vinci, Peru, 2006: Technical Professional in Computer & Information Technology
+- Google Professional Certificates, 2025: Project Management | Digital Marketing & E-commerce | AI Essentials | Introduction to AI.
+- Harvard University, CS50: Introduction to Computer Science Course, 2024.
 
-VOLUNTEERING
-Multimedia & Tech Team Member | Focal Point Church, Orlando FL | Sept 2025 – Present
-* Provide technical support for live Sunday services and monitor website performance.
+VOLUNTEERING & COMMUNITY
+Multimedia & Tech Team Member | Focal Point Church, Orlando FL | Sept 2025 - Present
+- Provide technical support for live Sunday services, operating ProPresenter on macOS for multimedia projection and screen management.
+- Assist in monitoring the organization's website performance and content updates to ensure seamless digital accessibility for the community.
+
+Architected and launched a Full-Stack application using Next.js, TypeScript, and Tailwind CSS. Demonstrated mastery in Headless architecture, which is key for TopDog Law's modernization. CI/CD Security: I established a secure, production-ready CI/CD workflow (GitHub to Vercel) and implemented Serverless security protocols to protect API keys and sensitive credentials. This included resolving critical production vulnerabilities related to dependency management to ensure operational stability.
+
+Organic Growth: Elevated UX via centralized keyword strategy and content audits, resulting in a 20% acceleration in organic search traffic. This proves my ability to link technical architecture directly to marketing goals. E-commerce Results: Developed three new e-commerce sites (WooCommerce), boosting online sales by 124% and improving operational efficiency by 15%. My focus is always on improving Core Web Vitals and performance for business gain.
+
+Legacy Data Solution: I was the architect of a centralized product database ("Rosetta Stone") to unify inconsistent legacy data across multiple platforms. This experience is directly transferable to managing complex data migration. Advanced Troubleshooting: Solved critical data portability issues by developing a Custom Simple Memory Vector Store in pure TypeScript, validating strong problem-solving skills in data management.
+
+AI Innovation: Pioneered the implementation of a RAG (Retrieval-Augmented Generation) architecture, orchestrating the data chain using LangChain Expression Language (LCEL) and connecting to the Gemini 2.5 Flash model for conversational functionality. Business Value of RAG: This architecture is ideal for analyzing and synthesizing large amounts of unstructured data, such as legal documents or research, making internal processes more efficient. I also hold Google's AI Essentials certification.
+
+Remote Leadership: Directed project execution and managed remote development teams using Jira and Agile methodologies (Scrum/Kanban). This ensures streamlined workflows and on-time delivery. Adaptability: Possesses a continuous learning mindset, demonstrated by earning a Harvard CS50 certification. My experience with AWS and Vercel infrastructure foundations is fully transferable to platforms like Cloudflare or Azure. I am also fully bilingual (English/Spanish) for stakeholder communication.
+
+Executive Strategy & Budgeting: My approach as a Director is focused on maximizing ROI by prioritizing technical debt resolution and strategic investments in scalable architecture (e.g., Next.js migration). I am skilled at presenting complex technical roadmaps and budgets to non-technical stakeholders and leadership, translating technical requirements into clear business value. I have a proven track record of orchestrating the automation of services, boosting client acquisition and efficiency by 20%.
+
+Risk Management & Escalation Protocol: I served as the primary technical escalation point for critical issues, including managed malware remediation, urgent server upgrades (PHP migrations), and complex, rapid-response troubleshooting. My methodology includes establishing rapid response protocols to maintain website integrity and prevent security breaches. This experience is key to managing the operational risks associated with a high-traffic legal firm website.

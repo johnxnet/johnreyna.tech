@@ -67,12 +67,12 @@ export default function Home() {
 
       {/* Tu Encabezado Profesional */}
       <h1 className="text-5xl font-extrabold text-gray-900 mb-4 text-center">
-        <span className="text-blue-600">Senior E-commerce Architect</span>
+        <span className="text-blue-600">Digital Platform Architect</span>
       </h1>
 
       {/* Resumen */}
       <p className="text-xl text-gray-600 mb-8 max-w-2xl text-center">
-        Specialist in legacy system modernization, scalable architecture (Next.js, Headless WordPress), and technical leadership.
+        Strategic Leader specializing in Headless Architecture (Next.js/AI), Legacy System Modernization, and driving growth through technical performance.
       </p>
 
       {/* AI Functionality Box */}
