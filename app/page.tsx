@@ -1,6 +1,7 @@
 'use client'; // Esta línea es OBLIGATORIA en Next.js para usar funcionalidades interactivas (hooks)
 
 import { useState } from 'react';
+import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
   // Estado 1: Almacena la pregunta del usuario
@@ -98,12 +99,15 @@ export default function Home() {
         </button>
 
         {/* Área de Respuesta de la IA */}
-        {answer && (
-          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-gray-800 whitespace-pre-wrap">
-            <p className="font-bold mb-1">AI Agent:</p>
-            {answer}
-          </div>
-        )}
+{answer && (
+  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-gray-800 whitespace-pre-wrap">
+    <p className="font-bold mb-1">AI Agent:</p>
+    
+    {/* LÍNEA MODIFICADA: Usa el componente para renderizar Markdown a HTML */}
+    <ReactMarkdown>{answer}</ReactMarkdown>
+    
+  </div>
+)}
       </div>
     </div>
   );
