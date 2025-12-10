@@ -49,7 +49,7 @@ export default function Home() {
   // Cambios: El ajuste de altura (h-screen) y distribución (justify-around) SÓLO se aplica en móvil (sm).
 // En pantallas grandes (lg), volvemos al centrado normal (justify-center) y min-h-screen.
 <div className="flex flex-col items-center px-4 py-8 
-                sm:h-screen sm:justify-around 
+                sm:min-h-screen sm:justify-around 
                 lg:min-h-screen lg:justify-center bg-gray-50">
       
       {/* NUEVO: Contenedor para la imagen */}
