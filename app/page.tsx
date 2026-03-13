@@ -68,12 +68,12 @@ export default function Home() {
 
       {/* Tu Encabezado Profesional */}
       <h1 className="text-5xl font-extrabold text-gray-900 mb-4 text-center">
-        <span className="text-blue-600">Digital Platform Architect</span>
+        <span className="text-blue-600">Digital Platform Specialist</span>
       </h1>
 
       {/* Resumen */}
       <p className="text-xl text-gray-600 mb-8 max-w-2xl text-center">
-        Strategic Leader specializing in Headless Architecture (Next.js/AI), Legacy System Modernization, and driving growth through technical performance.
+        Technical Leader specializing in CMS Operations, Web Performance, and driving growth through Digital Experience optimization
       </p>
 
       {/* AI Functionality Box */}
