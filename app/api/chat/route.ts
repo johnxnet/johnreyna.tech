@@ -92,6 +92,7 @@ const getVectorStore = async () => {
   const embeddings = new GoogleGenerativeAIEmbeddings({
     model: "embedding-004",
     apiKey: process.env.GEMINI_API_KEY,
+    apiVersion: "v1",
   });
   
   // Instanciamos nuestro store personalizado
