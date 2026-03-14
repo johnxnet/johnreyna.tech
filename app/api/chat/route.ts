@@ -68,7 +68,7 @@ declare global {
 }
 
 const llm = new ChatGoogleGenerativeAI({
-  model: "gemini-2.0-flash", 
+  model: "gemini-1.5-flash", //
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 2048,
 });
@@ -90,7 +90,7 @@ const getVectorStore = async () => {
   const splitDocs = await textSplitter.splitDocuments(docs);
 
 const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: "text-embedding-004", //
+  model: "embedding-001", //
   apiKey: process.env.GEMINI_API_KEY,
 });
   
