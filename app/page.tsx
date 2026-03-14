@@ -50,9 +50,9 @@ export default function Home() {
                     sm:min-h-screen sm:justify-around 
                     lg:min-h-screen lg:justify-center bg-gray-50">
       
-      {/* Profile Image Container */}
+      {/* Profile Image Container - CORREGIDO */}
       <img 
-          src="/john-reyna.webp" // Ruta desde la carpeta 'public'
+          src="/john-reyna.webp" 
           alt="John Reyna Profile" 
           className="w-48 h-48 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" 
       />
@@ -87,8 +87,8 @@ export default function Home() {
         </a>
       </div>
 
-      {/* AI AGENT SECTION - TEMPORARILY DISABLED (COMMENTED OUT)
-      <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-12">
+      {/* AI AGENT SECTION - TEMPORARILY DISABLED (COMMENTED OUT) */}
+      {/* <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-12">
         <h2 className="text-2xl font-semibold mb-3 text-center text-gray-800">🤖 Ask My AI Agent</h2>
         
         <input 
