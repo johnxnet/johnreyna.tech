@@ -54,4 +54,70 @@ export default function Home() {
       <img 
           src="/john-reyna.webp" // Ruta desde la carpeta 'public'
           alt="John Reyna Profile" 
-          className="w-48 h-48 rounded-full mb-6 object
+          className="w-48 h-48 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" 
+      />
+
+      {/* Main Name Heading */}
+      <h1 className="text-5xl font-extrabold text-gray-900 mb-2 text-center">
+        John Reyna
+      </h1>
+
+      {/* Professional Title */}
+      <h2 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
+        <span className="text-blue-600">Digital Platform Specialist</span>
+      </h2>
+
+      {/* Professional Summary */}
+      <p className="text-xl text-gray-600 mb-10 max-w-2xl text-center leading-relaxed">
+        Technical Leader specializing in CMS Operations, Web Performance, and driving growth through Digital Experience optimization.
+      </p>
+
+      {/* ACTIVE SECTION: Resume Download (PDF) */}
+      <div className="w-full max-w-lg p-8 bg-white border border-gray-200 rounded-2xl shadow-2xl text-center">
+        <h3 className="text-2xl font-bold text-gray-800 mb-4">📄 Professional Background</h3>
+        <p className="text-gray-600 mb-8">
+          Explore my detailed experience in platform architecture, CMS operations, and digital project management.
+        </p>
+        <a 
+          href="/John_Reyna_Resume.pdf" 
+          download
+          className="inline-block w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-10 rounded-xl transition-all duration-200 transform hover:scale-105 shadow-lg"
+        >
+          Download Resume (PDF)
+        </a>
+      </div>
+
+      {/* AI AGENT SECTION - TEMPORARILY DISABLED (COMMENTED OUT)
+      <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-12">
+        <h2 className="text-2xl font-semibold mb-3 text-center text-gray-800">🤖 Ask My AI Agent</h2>
+        
+        <input 
+          type="text" 
+          placeholder="Ex: Why should I hire John?"
+          className="w-full p-3 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
+          value={question} 
+          onChange={(e) => setQuestion(e.target.value)} 
+          disabled={isLoading} 
+          onKeyDown={(e) => { if (e.key === 'Enter') consultAI(); }} 
+        />
+        
+        <button 
+          className="mt-4 w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-150 disabled:bg-gray-400"
+          onClick={consultAI} 
+          disabled={isLoading} 
+        >
+          {isLoading ? 'Consulting...' : 'Consult My Experience'}
+        </button>
+
+        {answer && (
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-gray-800 whitespace-pre-wrap">
+            <p className="font-bold mb-1">AI Agent:</p>
+            <ReactMarkdown>{answer}</ReactMarkdown>
+          </div>
+        )}
+      </div>
+      */}
+      
+    </div>
+  );
+}
