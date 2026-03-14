@@ -46,19 +46,16 @@ export default function Home() {
   };
 
   return (
-  // Cambios: El ajuste de altura (h-screen) y distribución (justify-around) SÓLO se aplica en móvil (sm).
-// En pantallas grandes (lg), volvemos al centrado normal (justify-center) y min-h-screen.
-<div className="flex flex-col items-center px-4 py-8 
-                sm:min-h-screen sm:justify-around 
-                lg:min-h-screen lg:justify-center bg-gray-50">
+    <div className="flex flex-col items-center px-4 py-8 
+                    sm:min-h-screen sm:justify-around 
+                    lg:min-h-screen lg:justify-center bg-gray-50">
       
-      {/* NUEVO: Contenedor para la imagen */}
+        {/* NUEVO: Contenedor para la imagen */}
         <img 
             src="/john-reyna.webp" // Ruta desde la carpeta 'public'
             alt="John Reyna Profile" 
             className="w-50 h-50 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" // Clases Tailwind
         />
-        {/* FIN NUEVO */}
 
 
       {/* Tu Encabezado Profesional */}
@@ -66,7 +63,7 @@ export default function Home() {
         John Reyna
       </h1>
 
-      {/* Tu Encabezado Profesional */}
+      {/* Título Profesional */}
       <h1 className="text-5xl font-extrabold text-gray-900 mb-4 text-center">
         <span className="text-blue-600">Digital Platform Specialist</span>
       </h1>
@@ -76,39 +73,52 @@ export default function Home() {
         Technical Leader specializing in CMS Operations, Web Performance, and driving growth through Digital Experience optimization
       </p>
 
-      {/* AI Functionality Box */}
-      <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl">
+      {/* SECCIÓN TEMPORAL: Descarga de Resume */}
+      <div className="w-full max-w-lg p-6 bg-white border border-gray-200 rounded-lg shadow-xl text-center">
+        <h2 className="text-2xl font-bold text-gray-800 mb-4">📄 Mi Trayectoria Profesional</h2>
+        <p className="text-gray-600 mb-6">
+          Explora mi experiencia detallada en arquitectura de plataformas y gestión de proyectos digitales.
+        </p>
+        <a 
+          href="/john_reyna_resume.txt" 
+          download
+          className="inline-block bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg transition-colors shadow-lg"
+        >
+          Descargar Resume (TXT)
+        </a>
+      </div>
+
+      {/* AI Functionality Box - COMENTADA TEMPORALMENTE */}
+      {/* <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-8">
         <h2 className="text-2xl font-semibold mb-3 text-center text-gray-800">🤖 Ask My AI Agent</h2>
         
         <input 
           type="text" 
           placeholder="Ex: Why should I hire John?"
           className="w-full p-3 border border-gray-300 rounded-md focus:ring-green-500 focus:border-green-500"
-          value={question} // Conectamos el input con la variable de estado 'question'
-          onChange={(e) => setQuestion(e.target.value)} // Guardamos lo que escribe el usuario
-          disabled={isLoading} // Deshabilitamos si está cargando
-          onKeyDown={(e) => { if (e.key === 'Enter') consultAI(); }} // Permite enviar con Enter
+          value={question} 
+          onChange={(e) => setQuestion(e.target.value)} 
+          disabled={isLoading} 
+          onKeyDown={(e) => { if (e.key === 'Enter') consultAI(); }} 
         />
         
         <button 
           className="mt-4 w-full bg-green-600 text-white p-3 rounded-md hover:bg-green-700 transition duration-150 disabled:bg-gray-400"
-          onClick={consultAI} // Llamamos a la función de consulta al hacer clic
-          disabled={isLoading} // Deshabilitamos si está cargando
+          onClick={consultAI} 
+          disabled={isLoading} 
         >
           {isLoading ? 'Consulting...' : 'Consult My Experience'}
         </button>
 
-        {/* Área de Respuesta de la IA */}
-{answer && (
-  <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-gray-800 whitespace-pre-wrap">
-    <p className="font-bold mb-1">AI Agent:</p>
-    
-    {/* LÍNEA MODIFICADA: Usa el componente para renderizar Markdown a HTML */}
-    <ReactMarkdown>{answer}</ReactMarkdown>
-    
-  </div>
-)}
+        {answer && (
+          <div className="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-md text-gray-800 whitespace-pre-wrap">
+            <p className="font-bold mb-1">AI Agent:</p>
+            <ReactMarkdown>{answer}</ReactMarkdown>
+          </div>
+        )}
       </div>
+      */}
+      
     </div>
   );
 }
