@@ -4,76 +4,60 @@ import { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 
 export default function Home() {
-  // Estado 1: Almacena la pregunta del usuario
+  // Estado para la IA (se mantienen para cuando se reactive)
   const [question, setQuestion] = useState(''); 
-  // Estado 2: Almacena la respuesta del agente de IA
   const [answer, setAnswer] = useState('');
-  // Estado 3: Indica si la aplicación está esperando la respuesta de la IA (para mostrar el spinner)
   const [isLoading, setIsLoading] = useState(false);
 
-  // Función asíncrona que se ejecuta al hacer clic en el botón
   const consultAI = async () => {
-    if (!question.trim()) return; // Ignorar si el campo está vacío
-
-    setAnswer(''); // Limpiamos la respuesta anterior
-    setIsLoading(true); // Activamos el spinner
-
+    if (!question.trim()) return;
+    setAnswer('');
+    setIsLoading(true);
     try {
-      // Hacemos la llamada al Backend (la API Route que creamos)
       const response = await fetch('/api/chat', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        // Enviamos la pregunta en formato JSON
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ question }),
       });
-
       const data = await response.json();
-
       if (data.error) {
         setAnswer(`Error: ${data.error}`);
       } else {
-        // Mostramos la respuesta generada por la IA
         setAnswer(data.answer);
       }
     } catch (error) {
-      setAnswer('Connection Error. Check the console and ensure the API key is valid.');
+      setAnswer('Connection Error.');
       console.error(error);
     } finally {
-      setIsLoading(false); // Desactivamos el spinner
+      setIsLoading(false);
     }
   };
 
   return (
-    <div className="flex flex-col items-center px-4 py-8 
-                    sm:min-h-screen sm:justify-around 
-                    lg:min-h-screen lg:justify-center bg-gray-50">
+    <div className="flex flex-col items-center px-4 py-12 bg-gray-50 min-h-screen">
       
-      {/* Profile Image Container - CORREGIDO */}
+      {/* Profile Image Container */}
       <img 
           src="/john-reyna.webp" 
           alt="John Reyna Profile" 
           className="w-48 h-48 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" 
       />
 
-      {/* Main Name Heading */}
+      {/* Header Section */}
       <h1 className="text-5xl font-extrabold text-gray-900 mb-2 text-center">
         John Reyna
       </h1>
 
-      {/* Professional Title */}
       <h2 className="text-4xl font-extrabold text-gray-900 mb-6 text-center">
         <span className="text-blue-600">Digital Platform Specialist</span>
       </h2>
 
-      {/* Professional Summary */}
       <p className="text-xl text-gray-600 mb-10 max-w-2xl text-center leading-relaxed">
         Technical Leader specializing in CMS Operations, Web Performance, and driving growth through Digital Experience optimization.
       </p>
 
-      {/* ACTIVE SECTION: Resume Download (PDF) */}
-      <div className="w-full max-w-lg p-8 bg-white border border-gray-200 rounded-2xl shadow-2xl text-center">
+      {/* RESUME SECTION */}
+      <div className="w-full max-w-lg p-8 bg-white border border-gray-200 rounded-2xl shadow-xl text-center mb-16">
         <h3 className="text-2xl font-bold text-gray-800 mb-4">📄 Professional Background</h3>
         <p className="text-gray-600 mb-8">
           Explore my detailed experience in platform architecture, CMS operations, and digital project management.
@@ -87,8 +71,66 @@ export default function Home() {
         </a>
       </div>
 
+      {/* --- PROJECTS SECTION --- */}
+      <div className="w-full max-w-6xl mb-12">
+        <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center uppercase tracking-widest">Featured Projects</h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          
+          {/* Project 1: USA Tile */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex flex-col hover:border-blue-300 transition-all">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">🛒 WooCommerce Optimization</h3>
+            <p className="text-sm text-blue-600 font-bold mb-4 uppercase tracking-tighter">USA Tile & Marble</p>
+            <p className="text-gray-600 text-sm mb-6 flex-grow leading-relaxed">
+              Developed custom PHP logic for square footage pricing and built a centralized product data system ("Rosetta Stone") for multi-brand management.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#PHP</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#WooCommerce</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#ACF</span>
+            </div>
+            <div className="flex flex-col gap-1 text-xs">
+              <a href="https://usa-tile.com" target="_blank" className="text-blue-600 hover:underline">usa-tile.com →</a>
+              <a href="https://itilemosaic.com" target="_blank" className="text-blue-600 hover:underline">itilemosaic.com →</a>
+            </div>
+          </div>
+
+          {/* Project 2: PHIL AI */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex flex-col hover:border-blue-300 transition-all">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">🤖 PHIL – AI Chat Platform</h3>
+            <p className="text-sm text-blue-600 font-bold mb-4 uppercase tracking-tighter">Vision Bridge Logistics</p>
+            <p className="text-gray-600 text-sm mb-6 flex-grow leading-relaxed">
+              Architected a conversational AI interface using n8n and WordPress, featuring monetized access control via MemberPress.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#AI_Agents</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#n8n</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#WordPress</span>
+            </div>
+            <a href="https://visionbridgelogistics.com/" target="_blank" className="text-blue-600 text-xs hover:underline">visionbridgelogistics.com →</a>
+          </div>
+
+          {/* Project 3: Shopify UX */}
+          <div className="bg-white p-8 rounded-2xl shadow-lg border border-gray-100 flex flex-col hover:border-blue-300 transition-all">
+            <h3 className="text-xl font-bold text-gray-800 mb-2">🛍️ Shopify UX Engineering</h3>
+            <p className="text-sm text-blue-600 font-bold mb-4 uppercase tracking-tighter">NF Sports / Fear The Lamb</p>
+            <p className="text-gray-600 text-sm mb-6 flex-grow leading-relaxed">
+              Implemented dynamic content scheduling using Shopify Metaobjects and Liquid to reduce manual updates and improve UX.
+            </p>
+            <div className="flex flex-wrap gap-2 mb-6">
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#Liquid</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#Metaobjects</span>
+              <span className="px-2 py-1 bg-gray-100 text-gray-500 text-xs rounded font-mono">#Shopify</span>
+            </div>
+            <a href="https://nfsports.com/" target="_blank" className="text-blue-600 text-xs hover:underline">nfsports.com →</a>
+          </div>
+
+        </div>
+      </div>
+
       {/* AI AGENT SECTION - TEMPORARILY DISABLED (COMMENTED OUT) */}
-      {/* <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-12">
+      {/* 
+      <div className="w-full max-w-lg p-6 bg-white border border-blue-200 rounded-lg shadow-xl mt-12">
         <h2 className="text-2xl font-semibold mb-3 text-center text-gray-800">🤖 Ask My AI Agent</h2>
         
         <input 
