@@ -4,24 +4,19 @@ import { ChatGoogleGenerativeAI, GoogleGenerativeAIEmbeddings } from "@langchain
 import { RecursiveCharacterTextSplitter } from "@langchain/textsplitters";
 import { ChatPromptTemplate } from "@langchain/core/prompts";
 import { StringOutputParser } from "@langchain/core/output_parsers";
-import { RunnableSequence, RunnablePassthrough } from "@langchain/core/runnables";
 import { Document } from "@langchain/core/documents";
-import { VectorStore } from "@langchain/core/vectorstores"; // Clase base estable
+import { VectorStore } from "@langchain/core/vectorstores";
 import { Embeddings } from "@langchain/core/embeddings";
 import * as fs from 'fs';
+import path from 'path'; // Para manejo de rutas seguro en Windows
 
-// --- 1. IMPLEMENTACIÓN DE VECTOR STORE PERSONALIZADO (Pure JS) ---
-// Esto reemplaza a HNSWLib y MemoryVectorStore para evitar errores de compilación en Windows.
+// --- 1. VECTOR STORE PERSONALIZADO (Solución para Windows) ---
 class SimpleMemoryVectorStore extends VectorStore {
   private vectors: { content: string, embedding: number[], metadata: any }[] = [];
 
-  _vectorstoreType(): string {
-    return "simple_memory";
-  }
+  _vectorstoreType(): string { return "simple_memory"; }
 
-  constructor(embeddings: Embeddings) {
-    super(embeddings, {});
-  }
+  constructor(embeddings: Embeddings) { super(embeddings, {}); }
 
   async addVectors(vectors: number[][], documents: Document[]): Promise<void> {
     vectors.forEach((vec, i) => {
@@ -40,13 +35,10 @@ class SimpleMemoryVectorStore extends VectorStore {
   }
 
   async similaritySearchVectorWithScore(query: number[], k: number): Promise<[Document, number][]> {
-    // Calculamos la Similitud de Coseno manualmente
     const results = this.vectors.map((vec) => {
       const similarity = this.cosineSimilarity(query, vec.embedding);
       return { ...vec, score: similarity };
     });
-
-    // Ordenamos por mayor similitud y devolvemos los top k
     results.sort((a, b) => b.score - a.score);
     return results.slice(0, k).map((r) => [
       new Document({ pageContent: r.content, metadata: r.metadata }),
@@ -62,85 +54,82 @@ class SimpleMemoryVectorStore extends VectorStore {
   }
 }
 
-// --- CONFIGURACIÓN DE CACHÉ GLOBAL ---
-declare global {
-  var vectorStore: SimpleMemoryVectorStore | undefined;
-}
-
+// --- 2. CONFIGURACIÓN DE MODELOS ---
 const llm = new ChatGoogleGenerativeAI({
-  model: "gemini-1.5-flash", //
+  modelName: "gemini-1.5-flash", // Modelo estable y rápido
   apiKey: process.env.GEMINI_API_KEY,
   maxOutputTokens: 2048,
 });
 
-// --- 2. FUNCIÓN DE CARGA (Usando nuestra clase personalizada) ---
-const getVectorStore = async () => {
-  if (global.vectorStore) return global.vectorStore;
+const embeddings = new GoogleGenerativeAIEmbeddings({
+  modelName: "text-embedding-004", // Modelo de embeddings actualizado
+  apiKey: process.env.GEMINI_API_KEY,
+});
 
-  const filePath = "data/john_reyna_resume.txt";
-  if (!fs.existsSync(filePath)) throw new Error("Resume file not found");
+// Caché para no recargar el archivo en cada pregunta
+let vectorStoreInstance: SimpleMemoryVectorStore | null = null;
+
+const getVectorStore = async () => {
+  if (vectorStoreInstance) return vectorStoreInstance;
+
+  // Ruta absoluta robusta para desarrollo local
+  const filePath = path.join(process.cwd(), "data", "john_reyna_resume.txt");
+  
+  if (!fs.existsSync(filePath)) {
+    throw new Error(`Resume file not found at: ${filePath}`);
+  }
 
   const fileContent = fs.readFileSync(filePath, "utf-8");
   const docs = [new Document({ pageContent: fileContent })];
 
   const textSplitter = new RecursiveCharacterTextSplitter({
-    chunkSize: 1000,
-    chunkOverlap: 200,
+    chunkSize: 800,
+    chunkOverlap: 100,
   });
+  
   const splitDocs = await textSplitter.splitDocuments(docs);
-
-const embeddings = new GoogleGenerativeAIEmbeddings({
-  model: "text-embedding-004", //
-  apiKey: process.env.GEMINI_API_KEY,
-});
+  const store = new SimpleMemoryVectorStore(embeddings);
+  await store.addDocuments(splitDocs);
   
-  // Instanciamos nuestro store personalizado
-  const vectorStore = new SimpleMemoryVectorStore(embeddings);
-  await vectorStore.addDocuments(splitDocs);
-  
-  global.vectorStore = vectorStore;
-  return vectorStore;
+  vectorStoreInstance = store;
+  return store;
 };
 
-const formatDocumentsAsString = (documents: any[]) => {
-  return documents.map((document) => document.pageContent).join("\n\n");
-};
-
-// --- 3. MANEJADOR API ---
+// --- 3. MANEJADOR POST (API ENDPOINT) ---
 export async function POST(req: NextRequest) {
   try {
     const { question } = await req.json();
+
     if (!question) return NextResponse.json({ error: "No question provided" }, { status: 400 });
-    if (!process.env.GEMINI_API_KEY) return NextResponse.json({ error: "API Key not found" }, { status: 500 });
+    if (!process.env.GEMINI_API_KEY) return NextResponse.json({ error: "API Key missing" }, { status: 500 });
 
     const vectorStore = await getVectorStore();
-    const retriever = vectorStore.asRetriever();
+    
+    // Búsqueda manual de contexto
+    const contextDocs = await vectorStore.similaritySearch(question, 3);
+    const context = contextDocs.map(d => d.pageContent).join("\n\n");
 
     const prompt = ChatPromptTemplate.fromMessages([
-      ["system", `You are John Reyna's professional AI Agent. Answer the user's question ONLY based on the context provided below. 
-      If the answer is not in the context, state that you don't have enough information. Do not invent facts.
+      ["system", `You are John Reyna's professional AI Agent. Use the following pieces of context to answer the user's question. 
+      If you don't know the answer, just say that you don't know, don't try to make up an answer.
+      Respond in a professional and concise manner.
       
       Context:
       {context}`],
       ["human", "{question}"],
     ]);
 
-    const ragChain = RunnableSequence.from([
-      {
-        context: retriever.pipe(formatDocumentsAsString),
-        question: new RunnablePassthrough(),
-      },
-      prompt,
-      llm,
-      new StringOutputParser(),
-    ]);
+    const chain = prompt.pipe(llm).pipe(new StringOutputParser());
 
-    const result = await ragChain.invoke(question);
+    const result = await chain.invoke({
+      context: context,
+      question: question,
+    });
 
     return NextResponse.json({ answer: result });
     
   } catch (error: any) {
-    console.error("AI Error:", error);
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+    console.error("AI Error Details:", error);
+    return NextResponse.json({ error: error.message || "Something went wrong" }, { status: 500 });
   }
 }
