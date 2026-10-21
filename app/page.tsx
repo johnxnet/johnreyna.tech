@@ -91,7 +91,6 @@ export default function Home() {
     setInputMessage('')
     setIsTyping(true)
 
-// --- AGREGAR ESTE BLOQUE PARA RASTREAR EL CHAT EN GA4 ---
     if (typeof window !== 'undefined' && (window as any).gtag) {
       (window as any).gtag('event', 'ai_chat_interaction', {
         event_category: 'Engagement',
@@ -139,7 +138,7 @@ export default function Home() {
       </div>
 
       {/* ========================================================= */}
-      {/* MOBILE VIEW: BLACKBERRY EXECUTIVE PDA STYLE (EXACT FIT)    */}
+      {/* MOBILE VIEW: BLACKBERRY EXECUTIVE PDA STYLE (EXACT FIT)   */}
       {/* ========================================================= */}
       <div className="block sm:hidden h-[100dvh] bg-[#1c1c1c] text-white p-2 flex flex-col justify-between font-sans overflow-hidden z-10">
         
@@ -166,7 +165,7 @@ export default function Home() {
                 </div>
               </div>
               <p className="text-gray-800 leading-tight text-[10px]">
-                I am a digital platform and web operations specialist with 10 years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
+                I am a digital platform and web operations specialist with 15+ years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
               </p>
 
               <div className="space-y-1 pt-1 border-t border-gray-300 font-mono">
@@ -181,7 +180,6 @@ export default function Home() {
                   <button onClick={() => setActiveWindow('education')} className="p-1.5 bg-[#c0c0c0] text-black font-bold text-[10px] border border-black text-left">🎓 Education</button>
                 </div>
                 
-                {/* Botón de descarga de PDF en móvil */}
                 <a href="/John_Reyna_Resume.pdf" target="_blank" rel="noreferrer" className="block w-full p-1.5 bg-[#c0c0c0] text-black font-bold text-[10px] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-center shadow-sm">
                   📄 Download Resume (PDF)
                 </a>
@@ -240,7 +238,7 @@ export default function Home() {
               <p className="text-[10px]"><strong>Hello and welcome to my portfolio! 🎯</strong></p>
               <p className="text-[10px]">If you are evaluating candidates who can lead e-commerce architecture, govern complex CMS platforms, and connect engineering directly with business outcomes, here is why I am an ideal fit:</p>
               <ul className="list-disc pl-4 space-y-1 text-[10px]">
-                <li><strong>Proven Impact:</strong> 10 years optimizing multi-site e-commerce ecosystems and AI pipelines.</li>
+                <li><strong>Proven Impact:</strong> 15+ years optimizing multi-site e-commerce ecosystems, deliverability infrastructure, and AI pipelines.</li>
                 <li><strong>Availability:</strong> Based in Orlando, FL (Remote, hybrid, or onsite).</li>
               </ul>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
@@ -261,6 +259,10 @@ export default function Home() {
               <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
                 <div className="font-bold text-[#000080] text-[10px]">WordPress Lead Dev — Chicago Code Monkeys (2013–2020)</div>
                 <p className="text-[10px] text-gray-800">Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira Agile.</p>
+              </div>
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
+                <div className="font-bold text-[#000080] text-[10px]">Email Campaign Manager — STEdb Tech (2006–2012)</div>
+                <p className="text-[10px] text-gray-800">Managed end-to-end email campaign operations, DBM platform, QA, infrastructure, deliverability, and cross-functional global coordination.</p>
               </div>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
             </div>
@@ -316,7 +318,7 @@ export default function Home() {
                 <p className="text-[10px] text-gray-800">Bachelor of Science in Software Engineering (2026–2028).</p>
               </div>
               <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
-                <div className="font-bold text-[#000080] text-[10px]">Leonardo Da Vinci Institute</div>
+                <div className="font-bold text-[#000080] text-[10px]">Instituto Privado Leonardo Da Vinci</div>
                 <p className="text-[10px] text-gray-800">Associate&apos;s Degree in Computer Science.</p>
               </div>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
@@ -425,7 +427,7 @@ export default function Home() {
                       <div className="bg-[#000080] text-white px-2 py-0.5 text-[11px] inline-block font-bold">Digital Platform & Web Operations Specialist</div>
                       <h1 className="text-2xl font-extrabold text-black">John Reyna</h1>
                       <p className="text-sm text-gray-800 font-sans leading-relaxed">
-                        I am a digital platform and web operations specialist with 10 years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
+                        I am a digital platform and web operations specialist with 15+ years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
                       </p>
                       <div className="text-[11px] font-bold text-gray-700 flex items-center gap-x-3 pt-1 border-t border-gray-300">
                         <span>📍 Orlando, FL</span><span>•</span>
@@ -477,7 +479,7 @@ export default function Home() {
                     <p>If you are evaluating candidates who can lead e-commerce architecture, govern complex CMS platforms, and connect engineering directly with business outcomes, here is why I am an excellent addition to your team:</p>
                     <p><strong>Why I am a strong fit:</strong></p>
                     <ul className="list-disc pl-4 space-y-1.5">
-                      <li><strong>Proven Impact:</strong> Direct ownership of large-scale multi-site e-commerce ecosystems, custom purchasing workflows, and AI automation pipelines.</li>
+                      <li><strong>Proven Impact:</strong> Direct ownership of large-scale multi-site e-commerce ecosystems, deliverability infrastructure, and AI automation pipelines.</li>
                       <li><strong>Strategic Availability:</strong> Based in Orlando, FL, fully available for remote, hybrid, or onsite collaboration.</li>
                       <li><strong>End-to-End Ownership:</strong> From custom PHP and Shopify Liquid to cloud governance and cross-functional Agile leadership.</li>
                     </ul>
@@ -514,6 +516,12 @@ export default function Home() {
                       <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys, Chicago, IL (Jan 2013–Dec 2020)</div>
                       <p className="text-gray-800 text-xs">
                         Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira Agile workflows, CRM integrations, and reliable production launches.
+                      </p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Email Campaign Manager — STEdb Tech, Royal Palm Beach, FL (Aug 2006–Dec 2012)</div>
+                      <p className="text-gray-800 text-xs">
+                        Managed end-to-end email campaign operations using a proprietary DBM platform, overseeing campaign builders and HTML quality assurance (QA). Directed technical infrastructure, IP whitelisting, feedback loops, server acquisition, and SPF/DKIM configurations. Served as the core technical liaison connecting stakeholders, international developers in Ukraine/India, and major ISPs to ensure high inbox placement.
                       </p>
                     </div>
                   </div>

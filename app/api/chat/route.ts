@@ -106,6 +106,12 @@ WORK EXPERIENCE
    - Resolved production issues and supported reliable launches and ongoing operations.
    - Built CRM and form integrations connecting customer-facing experiences with business workflows.
 
+Foundational Technical Experience: Email Campaign Manager at STEdb Tech (Royal Palm Beach, FL | Aug 2006 – Dec 2012). 
+- Responsibilities & Achievements: Managed end-to-end email campaign operations using a proprietary DBM platform. Oversaw campaign builders, executed HTML quality assurance (QA), and ensured precise alignment with client mockups. 
+- Infrastructure & Deliverability: Handled virtual server acquisition and rotation, IP whitelisting, feedback loops, and SPF/DKIM configurations to protect sender reputation and maximize inbox placement.
+- Cross-Functional & Global Leadership: Acted as the core technical liaison connecting business stakeholders, international developers in Ukraine and India (coordinating bug fixes and feature rollouts), and major ISPs like AOL, Yahoo, and United Online to resolve blocks and deliverability bottlenecks.  
+
+
 EDUCATION
 - Western Governors University — Bachelor of Science in Software Engineering,
   2026 – Expected 2028.
