@@ -1,263 +1,470 @@
-'use client';
+'use client'
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react'
+
+type WindowKey = 'home' | 'experience' | 'cases' | 'skills' | 'education' | 'recruiter'
 
 export default function Home() {
-  const [expandedProject, setExpandedProject] = useState<string | null>(null);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true)
+  const [bootLogs, setBootLogs] = useState<string[]>([])
+  const [activeWindow, setActiveWindow] = useState<WindowKey>('home')
+  const [selectedImage, setSelectedImage] = useState<string | null>(null)
+  const [time, setTime] = useState('12:00 PM')
 
-  const toggleProject = (id: string) => {
-    setExpandedProject(expandedProject === id ? null : id);
-  };
+  useEffect(() => {
+    const logs = [
+      'BIOS Version 2.0.01 - Turbo Architecture',
+      'Initializing Node.js runtime & V8 engine...',
+      'Loading Next.js 16 kernel (Turbopack compiler)...',
+      'Mounting virtual filesystem (Rosetta Stone CMS)...',
+      'Establishing secure connection to GitHub & Vercel...',
+      'System Ready. Launching Win2000 Desktop GUI...'
+    ]
+
+    let current = 0
+    const interval = setInterval(() => {
+      if (current < logs.length) {
+        setBootLogs((prev) => [...prev, logs[current]])
+        current++
+      } else {
+        clearInterval(interval)
+        setTimeout(() => setLoading(false), 500)
+      }
+    }, 300)
+
+    return () => clearInterval(interval)
+  }, [])
+
+  useEffect(() => {
+    const updateClock = () => {
+      const now = new Date()
+      setTime(now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }))
+    }
+    updateClock()
+    const timer = setInterval(updateClock, 1000)
+    return () => clearInterval(timer)
+  }, [])
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-black text-green-400 font-mono p-6 flex flex-col justify-center max-w-lg mx-auto">
+        <div className="space-y-2">
+          <div className="text-white font-bold mb-4">=== JOHN REYNA KERNEL BOOT ===</div>
+          {bootLogs.map((log, index) => (
+            <div key={index} className="text-xs">
+              <span className="text-blue-400">[OK]</span> {log}
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
 
   return (
-    <div className="flex flex-col items-center px-4 py-12 bg-gray-50 min-h-screen font-sans text-gray-900">
+    <div className="min-h-screen bg-[#008080] text-black font-mono flex flex-col justify-between select-none overflow-x-hidden">
       
-      {/* --- LIGHTBOX / MODAL FOR IMAGES --- */}
-      {selectedImage && (
-        <div 
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/95 p-4 cursor-zoom-out backdrop-blur-sm"
-          onClick={() => setSelectedImage(null)}
-        >
-          <div className="relative max-w-7xl w-full h-full flex items-center justify-center">
-            <img 
-              src={selectedImage} 
-              className="max-w-full max-h-full object-contain rounded-lg shadow-2xl animate-in fade-in zoom-in duration-300"
-              alt="Project Showcase"
-            />
-            <button className="absolute top-4 right-4 text-white bg-white/10 rounded-full p-3 hover:bg-white/20 transition-all">
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-8 w-8" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-              </svg>
-            </button>
-          </div>
-        </div>
-      )}
+      {/* MOBILE HEADER */}
+      <header className="bg-[#000080] text-white px-3 py-2 flex justify-between items-center text-xs border-b-2 border-white md:hidden">
+        <span className="font-bold">💻 John_Reyna_OS</span>
+        <span>{time}</span>
+      </header>
 
-      {/* --- PROFILE SECTION --- */}
-      <img 
-        src="/john-reyna.webp" 
-        alt="John Reyna Profile" 
-        className="w-40 h-40 rounded-full mb-6 object-cover shadow-lg border-4 border-blue-200" 
-      />
-      <h1 className="text-5xl font-extrabold mb-2 text-center tracking-tight">John Reyna</h1>
-      <h2 className="text-3xl font-bold text-blue-600 mb-6 text-center">Digital Platform Specialist</h2>
-      <p className="text-xl text-gray-600 mb-12 max-w-2xl text-center leading-relaxed italic">
-        "Bridging technical architecture with digital growth."
-      </p>
-
-      {/* --- FEATURED PROJECTS SECTION --- */}
-      <div className="w-full max-w-5xl mb-16 space-y-8">
-        <h2 className="text-3xl font-bold text-gray-800 mb-10 text-center uppercase tracking-widest border-b-2 border-blue-100 pb-4">Featured Projects</h2>
+      {/* MAIN CONTAINER */}
+      <main className="flex-1 p-2 sm:p-6 flex flex-col items-center justify-center max-w-4xl mx-auto w-full">
         
-        {/* PROJECT 1: USA TILE & MARBLE */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300">
-          <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-1 italic">🛒 USA Tile & Marble – WooCommerce Platform Optimization</h3>
-              <p className="text-blue-600 font-bold text-sm tracking-widest uppercase">Live Site: itilemosaic.com</p>
-              <a href="https://itilemosaic.com" target="_blank" className="text-blue-500 text-xs hover:underline mt-2 inline-block">itilemosaic.com →</a>
+        {/* DESKTOP ICON GRID */}
+        <div className="w-full grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 mb-4 px-1">
+          <button
+            onClick={() => setActiveWindow('experience')}
+            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
+          >
+            <span className="text-2xl mb-1">📁</span>
+            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Experience</span>
+          </button>
+
+          <button
+            onClick={() => setActiveWindow('cases')}
+            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
+          >
+            <span className="text-2xl mb-1">🗂️</span>
+            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Cases</span>
+          </button>
+
+          <button
+            onClick={() => setActiveWindow('skills')}
+            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
+          >
+            <span className="text-2xl mb-1">⚙️</span>
+            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Skills</span>
+          </button>
+
+          <button
+            onClick={() => setActiveWindow('education')}
+            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
+          >
+            <span className="text-2xl mb-1">📄</span>
+            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Education</span>
+          </button>
+
+          <button
+            onClick={() => setActiveWindow('recruiter')}
+            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer col-span-3 sm:col-span-1"
+          >
+            <span className="text-2xl mb-1">⭐</span>
+            <span className="text-yellow-200 text-[10px] font-bold bg-[#800000] px-1 border border-black truncate w-full text-center animate-pulse">Recruiter.msg</span>
+          </button>
+        </div>
+
+        {/* WINDOW CONTAINER */}
+        <div className="w-full bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] shadow-xl">
+          
+          {/* WINDOW TITLE BAR */}
+          <div className="bg-[#000080] px-2 py-1.5 flex justify-between items-center text-white font-bold text-xs">
+            <div className="flex items-center gap-1.5 truncate">
+              <span>💻</span>
+              <span className="truncate">John_Reyna_System_Manager.exe</span>
             </div>
-            <button onClick={() => toggleProject('usa-tile')} className="w-full md:w-auto bg-blue-50 text-blue-700 px-8 py-3 rounded-xl font-bold hover:bg-blue-100 transition-all shadow-sm">
-              {expandedProject === 'usa-tile' ? 'Close Case ▲' : 'Read Case ▼'}
-            </button>
+            <div className="flex gap-1 shrink-0">
+              <button 
+                onClick={() => setActiveWindow('home')}
+                className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold"
+              >
+                _
+              </button>
+              <button 
+                onClick={() => setActiveWindow('home')}
+                className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold"
+              >
+                X
+              </button>
+            </div>
           </div>
-          {expandedProject === 'usa-tile' && (
-            <div className="px-8 pb-10 border-t border-gray-100 pt-8 animate-in slide-in-from-top-4 duration-500">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10 text-sm leading-relaxed text-gray-700">
-                <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-red-600">The Problem</h4>
-                  <p>WooCommerce did not support pricing based on square footage (SF), causing inconsistencies across product, cart, and checkout.</p>
-                  <h4 className="text-lg font-bold text-green-600">Result</h4>
-                  <p>Delivered a consistent and reliable purchasing experience, improving pricing accuracy and reducing friction during checkout.</p>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-2xl">
-                  <h4 className="text-lg font-bold text-blue-800 mb-3">What I Did</h4>
-                  <ul className="list-disc list-inside space-y-2 text-xs">
-                    <li>Developed custom PHP logic to dynamically calculate pricing based on square footage and ensured consistency across the entire purchase flow (product, cart, checkout, and order confirmation).</li>
-                    <li>Customized WooCommerce templates and extended core functionality to support real-time quantity updates and pricing accuracy.</li>
-                    <li>Leveraged Advanced Custom Fields (ACF) to structure complex product data and enable scalable customization across multiple websites.</li>
-                    <li>Designed a centralized product data system (“Rosetta Stone”) to manage pricing, inventory, and SEO metadata across multiple brands sharing a single warehouse.</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                {[
-                  { src: '/images/itilemosaic/product-page.jpg', label: 'SF CALCULATOR' },
-                  { src: '/images/itilemosaic/cart-page.jpg', label: 'CART SYNCHRONIZATION' },
-                  { src: '/images/itilemosaic/checkout-page.jpg', label: 'ORDER INTEGRITY' }
-                ].map((img, idx) => (
-                  <div key={idx} className="cursor-zoom-in group text-center" onClick={() => setSelectedImage(img.src)}>
-                    <img src={img.src} className="rounded-xl border shadow-sm group-hover:opacity-90 transition" alt={img.label} />
-                    <p className="text-[10px] text-gray-400 mt-2 font-bold uppercase">{img.label}</p>
+
+          {/* MENU BAR */}
+          <div className="bg-[#c0c0c0] px-2 py-1 border-b border-[#808080] text-[11px] hidden sm:flex gap-4 text-black">
+            <span>File</span>
+            <span>Edit</span>
+            <span>View</span>
+            <span>Help</span>
+          </div>
+
+          {/* WINDOW CONTENT AREA */}
+          <div className="p-3 sm:p-6 bg-[#ffffff] text-black space-y-4 min-h-[360px] max-h-[70vh] overflow-y-auto border-2 border-inset border-[#808080] m-1 sm:m-2">
+
+            {/* HOME VIEW */}
+            {activeWindow === 'home' && (
+              <div className="space-y-4">
+                <div className="flex flex-col sm:flex-row items-center gap-4 bg-[#f5f5f5] p-3 border border-gray-400">
+                  <img
+                    src="/john-reyna.webp"
+                    alt="John Reyna"
+                    className="w-20 h-20 sm:w-28 sm:h-28 object-cover border-2 border-black shrink-0"
+                  />
+                  <div className="space-y-2 text-center sm:text-left w-full">
+                    <div className="bg-[#000080] text-white px-2 py-0.5 text-[11px] inline-block font-bold">
+                      Digital Platform & Web Operations Specialist
+                    </div>
+                    <h1 className="text-lg sm:text-2xl font-extrabold text-black">
+                      John Reyna
+                    </h1>
+                    <p className="text-xs sm:text-sm text-gray-800 font-sans leading-relaxed">
+                      10+ years driving e-commerce optimization, shopping experiences, multi-site CMS governance, and cross-functional agile delivery.
+                    </p>
+                    
+                    {/* CLICKEABLE CONTACT INFO BAR */}
+                    <div className="text-[11px] font-bold text-gray-700 flex flex-wrap justify-center sm:justify-start items-center gap-x-3 gap-y-1 pt-1 border-t border-gray-300">
+                      <span>📍 Orlando, FL</span>
+                      <span>•</span>
+                      <a href="tel:6893192244" className="text-blue-700 hover:underline">📞 (689) 319-2244</a>
+                      <span>•</span>
+                      <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp</a>
+                      <span>•</span>
+                      <a href="mailto:john.rear@gmail.com" className="text-blue-700 hover:underline">✉️ Email</a>
+                      <span>•</span>
+                      <a href="https://linkedin.com/in/johnreyna" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">💼 LinkedIn</a>
+                    </div>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+                </div>
 
-        {/* PROJECT 2: PHIL AI */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300">
-          <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-1">🤖 PHIL – AI Chat Platform with WordPress & n8n</h3>
-              <p className="text-blue-600 font-bold text-sm tracking-widest uppercase">Live Site: visionbridgelogistics.com</p>
-              <a href="https://visionbridgelogistics.com/" target="_blank" className="text-blue-500 text-xs hover:underline mt-2 inline-block">visionbridgelogistics.com →</a>
-            </div>
-            <button onClick={() => toggleProject('phil')} className="w-full md:w-auto bg-blue-50 text-blue-700 px-8 py-3 rounded-xl font-bold hover:bg-blue-100 transition-all shadow-sm">
-              {expandedProject === 'phil' ? 'Close Case ▲' : 'Read Case ▼'}
-            </button>
-          </div>
-          {expandedProject === 'phil' && (
-            <div className="px-8 pb-10 border-t border-gray-100 pt-8 animate-in slide-in-from-top-4 duration-500">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10 text-sm leading-relaxed text-gray-700">
-                <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-red-600">The Problem</h4>
-                  <p>Manual processes and repetitive user queries required ongoing manual handling, limiting scalability and response efficiency.</p>
-                  <h4 className="text-lg font-bold text-green-600">Result</h4>
-                  <p>Reduced manual workload, enabled scalable user interaction through an AI-driven interface, and introduced a monetized access model for the platform.</p>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-2xl">
-                  <h4 className="text-lg font-bold text-blue-800 mb-3">What I Did</h4>
-                  <ul className="list-disc list-inside space-y-2 text-xs">
-                    <li>Developed a custom WordPress plugin powering a conversational AI chat interface inspired by ChatGPT/Gemini, allowing users to submit queries directly within the platform.</li>
-                    <li>Connected the frontend chat interface with n8n workflows to process user inputs and generate automated responses.</li>
-                    <li>Implemented secure access control using MemberPress, restricting the AI tool to authenticated users with active subscriptions.</li>
-                    <li>Designed structured workflows to handle queries and simulate intelligent responses in a controlled environment.</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
-                {[
-                  { src: '/images/phil/ai-agent.jpg', label: 'N8N WORKFLOW' },
-                  { src: '/images/phil/ai-agent-2.jpg', label: 'AI MAPPING' },
-                  { src: '/images/phil/ai-agent-plugin.jpg', label: 'WP BACKEND' },
-                  { src: '/images/phil/login.jpg', label: 'ACCESS PORTAL' }
-                ].map((img, idx) => (
-                  <div key={idx} className="cursor-zoom-in group text-center" onClick={() => setSelectedImage(img.src)}>
-                    <img src={img.src} className="rounded-lg border shadow-sm group-hover:opacity-90 transition h-24 w-full object-cover" alt={img.label} />
-                    <p className="text-[8px] text-gray-400 mt-1 font-bold">{img.label}</p>
+                {/* DIRECTORY BUTTONS */}
+                <div className="space-y-2">
+                  <div className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
+                    📁 SELECT DIRECTORY / SECTION:
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                    <button
+                      onClick={() => setActiveWindow('experience')}
+                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
+                    >
+                      <span>🏢 Work Experience & Leadership</span>
+                      <span className="text-[10px] bg-white px-1 border">Open</span>
+                    </button>
 
-        {/* PROJECT 3: SHOPIFY OPTIMIZATION */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300">
-          <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-1">🛍️ Shopify Optimization – Dynamic Content & UX Improvements</h3>
-              <p className="text-blue-600 font-bold text-sm tracking-widest uppercase italic leading-tight">NF Sports | Fear The Lamb</p>
-              <div className="flex flex-wrap gap-x-4 mt-2 text-center md:text-left">
-                <a href="https://nfsports.com/" target="_blank" className="text-blue-500 text-xs hover:underline">nfsports.com →</a>
-                <a href="https://fearthelambapparel.com/pages/daily-bible-verse" target="_blank" className="text-blue-500 text-xs hover:underline">fearthelamb.com →</a>
-              </div>
-            </div>
-            <button onClick={() => toggleProject('shopify')} className="w-full md:w-auto bg-blue-50 text-blue-700 px-8 py-3 rounded-xl font-bold hover:bg-blue-100 transition-all shadow-sm">
-              {expandedProject === 'shopify' ? 'Close Case ▲' : 'Read Case ▼'}
-            </button>
-          </div>
-          {expandedProject === 'shopify' && (
-            <div className="px-8 pb-10 border-t border-gray-100 pt-8 animate-in slide-in-from-top-4 duration-500">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-10 text-sm leading-relaxed text-gray-700">
-                <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-red-600">The Problem</h4>
-                  <p>The storefront required manual updates for dynamic content and had limitations in navigation and product discovery.</p>
-                  <h4 className="text-lg font-bold text-green-600">Result</h4>
-                  <p>Eliminated manual content updates, improved consistency across the storefront, and enhanced overall user experience.</p>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-2xl">
-                  <h4 className="text-lg font-bold text-blue-800 mb-3">What I Did</h4>
-                  <ul className="list-disc list-inside space-y-2 text-xs">
-                    <li>Customized Shopify themes using Liquid to improve navigation, product discovery, and overall user experience.</li>
-                    <li>Built a dynamic content system using Shopify Metaobjects, enabling content to be scheduled by date directly from the admin panel.</li>
-                    <li>Implemented logic to automatically display content based on the current date, including fallback mechanisms to ensure content is always shown.</li>
-                  </ul>
-                </div>
-              </div>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
-                {[
-                  { src: '/images/nfsports-fear/bibleverses-rotation.jpg', label: 'DYNAMIC UI' },
-                  { src: '/images/nfsports-fear/bibleverses-rotation2.jpg', label: 'METAOBJECTS SETUP' },
-                  { src: '/images/nfsports-fear/bibleverses-rotation3.jpg', label: 'SCHEDULED ENTRIES' },
-                  { src: '/images/nfsports-fear/bibleverses-rotation4.jpg', label: 'LIQUID LOGIC' },
-                  { src: '/images/nfsports-fear/bibleverses-rotation5.jpg', label: 'FRONTEND PREVIEW' },
-                  { src: '/images/nfsports-fear/search-bar-improvement.jpg', label: 'SEARCH UX' }
-                ].map((img, idx) => (
-                  <div key={idx} className="cursor-zoom-in group text-center" onClick={() => setSelectedImage(img.src)}>
-                    <img src={img.src} className="rounded-lg border shadow-sm group-hover:opacity-90 transition h-32 w-full object-cover" alt={img.label} />
-                    <p className="text-[8px] text-gray-400 mt-1 font-bold">{img.label}</p>
+                    <button
+                      onClick={() => setActiveWindow('cases')}
+                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
+                    >
+                      <span>🚀 Case Studies & E-Commerce</span>
+                      <span className="text-[10px] bg-white px-1 border">Open</span>
+                    </button>
+
+                    <button
+                      onClick={() => setActiveWindow('skills')}
+                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
+                    >
+                      <span>🛠️ Core Competencies Matrix</span>
+                      <span className="text-[10px] bg-white px-1 border">Open</span>
+                    </button>
+
+                    <button
+                      onClick={() => setActiveWindow('education')}
+                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
+                    >
+                      <span>🎓 Education & Credentials</span>
+                      <span className="text-[10px] bg-white px-1 border">Open</span>
+                    </button>
                   </div>
-                ))}
-              </div>
-            </div>
-          )}
-        </div>
+                </div>
 
-        {/* PROJECT 4: PERSONAL PORTFOLIO & CI/CD */}
-        <div className="bg-white rounded-3xl shadow-xl border border-gray-100 overflow-hidden transition-all duration-300">
-          <div className="p-8 flex flex-col md:flex-row justify-between items-center gap-6">
-            <div className="flex-1 text-center md:text-left">
-              <h3 className="text-2xl font-bold mb-1">🚀 Modern Portfolio & CI/CD Pipeline</h3>
-              <p className="text-blue-600 font-bold text-sm tracking-widest uppercase">johnreyna.tech</p>
-              <a href="https://johnreyna.tech" target="_blank" className="text-blue-500 text-xs hover:underline mt-2 inline-block">johnreyna.tech →</a>
-            </div>
-            <button onClick={() => toggleProject('portfolio')} className="w-full md:w-auto bg-blue-50 text-blue-700 px-8 py-3 rounded-xl font-bold hover:bg-blue-100 transition-all shadow-sm">
-              {expandedProject === 'portfolio' ? 'Close Case ▲' : 'Read Case ▼'}
+                <div className="flex flex-col sm:flex-row justify-center gap-2 pt-2">
+                  <a
+                    href="/John_Reyna_Resume.pdf"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center hover:bg-gray-300"
+                  >
+                    📄 Download Resume (PDF)
+                  </a>
+                  <a
+                    href="https://wa.me/16893192244"
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center text-emerald-900 hover:bg-gray-300"
+                  >
+                    💬 WhatsApp Direct
+                  </a>
+                  <button
+                    onClick={() => setActiveWindow('recruiter')}
+                    className="px-3 py-2 bg-yellow-100 border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center text-blue-900 animate-pulse"
+                  >
+                    ⭐ Recruiter Welcome Note
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* RECRUITER WELCOME NOTE */}
+            {activeWindow === 'recruiter' && (
+              <div className="space-y-4 font-sans">
+                <div className="flex justify-between items-center border-b border-black pb-2">
+                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">⭐ Recruiter_Welcome.msg (Direct Brief)</h2>
+                  <button 
+                    onClick={() => setActiveWindow('home')}
+                    className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono"
+                  >
+                    Close [X]
+                  </button>
+                </div>
+
+                <div className="bg-[#ffffe1] p-4 border border-gray-400 space-y-3 text-xs sm:text-sm text-gray-900 shadow-inner font-sans">
+                  <p className="font-bold text-blue-900">
+                    Hello! Welcome to my interactive portfolio.
+                  </p>
+                  <p>
+                    If you are reviewing my profile for a Product, E-Commerce, or Web Operations role, here is why I am an immediate fit for your team:
+                  </p>
+                  <ul className="list-disc pl-4 space-y-1.5">
+                    <li><strong>Strategic Location:</strong> Based in Orlando / Celebration, FL[cite: 6], fully available for hybrid, on-site, or remote collaboration.</li>
+                    <li><strong>Proven Track Record:</strong> 10+ years driving large-scale e-commerce, multi-site CMS governance, promotional rules, and product delivery.</li>
+                    <li><strong>Cross-Functional Alignment:</strong> Experienced in bridging Marketing, Revenue, Legal, Design, and Engineering stakeholders.</li>
+                  </ul>
+                  <p className="pt-2 border-t border-yellow-300 font-semibold text-gray-800">
+                    Let&apos;s connect directly:
+                  </p>
+                  <div className="flex flex-wrap gap-3 font-bold text-xs">
+                    <a href="tel:6893192244" className="text-blue-700 hover:underline">📞 (689) 319-2244</a>
+                    <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp</a>
+                    <a href="mailto:john.rear@gmail.com" className="text-blue-700 hover:underline">✉️ Email</a>
+                    <a href="https://linkedin.com/in/johnreyna" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">💼 LinkedIn</a>
+                  </div>
+                </div>
+
+                <div className="text-center pt-2">
+                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">
+                    &lt;&lt; Back to Desktop
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {/* EXPERIENCE VIEW */}
+            {activeWindow === 'experience' && (
+              <div className="space-y-4 font-sans">
+                <div className="flex justify-between items-center border-b border-black pb-2">
+                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🏢 Work Experience</h2>
+                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                </div>
+                <div className="space-y-3 text-xs sm:text-sm">
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
+                    <div className="font-bold text-[#000080]">Web Platform & Digital Operations Consultant (2025–Present)</div>
+                    <p className="text-gray-800 text-xs">Technical delivery for PHIL AI SaaS (201 Digital Group) and Shopify feature development at NF Sports.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
+                    <div className="font-bold text-[#000080]">Web Platform Manager — USA Tile & Marble (2021–2025)</div>
+                    <p className="text-gray-800 text-xs">Managed multi-site WooCommerce ecosystems, checkout rules, and &ldquo;Rosetta Stone&rdquo; centralized CMS architecture.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
+                    <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys (2013–2020)</div>
+                    <p className="text-gray-800 text-xs">Led distributed developer teams across South America, managing Jira agile workflows.</p>
+                  </div>
+                </div>
+                <div className="text-center pt-2">
+                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
+                </div>
+              </div>
+            )}
+
+            {/* CASES VIEW */}
+            {activeWindow === 'cases' && (
+              <div className="space-y-4 font-sans">
+                <div className="flex justify-between items-center border-b border-black pb-2">
+                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🚀 Case Studies</h2>
+                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                </div>
+                <div className="space-y-3 text-xs sm:text-sm">
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
+                    <div>
+                      <div className="font-bold text-[#000080]">USA Tile & Marble</div>
+                      <p className="text-gray-800 text-[11px]">Centralized product governance & checkout optimization.</p>
+                    </div>
+                    <a href="https://itilemosaic.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
+                    <div>
+                      <div className="font-bold text-[#000080]">NF Sports & Fear The Lamb</div>
+                      <p className="text-gray-800 text-[11px]">Shopify Liquid custom modules & subscription flows.</p>
+                    </div>
+                    <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
+                    <div>
+                      <div className="font-bold text-[#000080]">PHIL AI SaaS Platform</div>
+                      <p className="text-gray-800 text-[11px]">FastAPI integration & n8n automation.</p>
+                    </div>
+                    <a href="https://visionbridgelogistics.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
+                  </div>
+                </div>
+                <div className="text-center pt-2">
+                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
+                </div>
+              </div>
+            )}
+
+            {/* SKILLS VIEW */}
+            {activeWindow === 'skills' && (
+              <div className="space-y-4 font-sans">
+                <div className="flex justify-between items-center border-b border-black pb-2">
+                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🛠️ Core Competencies</h2>
+                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">E-Commerce & CMS</div>
+                    <p className="text-gray-700 text-[11px]">WooCommerce, Shopify Liquid, WordPress, ACF.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">Product & Agile QA</div>
+                    <p className="text-gray-700 text-[11px]">Jira Sprints, User Stories, End-to-End QA.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">APIs & AI Stack</div>
+                    <p className="text-gray-700 text-[11px]">REST APIs, Swagger, n8n, Next.js 16, TypeScript.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">Analytics & CRO</div>
+                    <p className="text-gray-700 text-[11px]">GA4, Google Tag Manager, Hotjar Heatmaps.</p>
+                  </div>
+                </div>
+                <div className="text-center pt-2">
+                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
+                </div>
+              </div>
+            )}
+
+            {/* EDUCATION VIEW */}
+            {activeWindow === 'education' && (
+              <div className="space-y-4 font-sans">
+                <div className="flex justify-between items-center border-b border-black pb-2">
+                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🎓 Education & Credentials</h2>
+                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                </div>
+                <div className="space-y-3 text-xs">
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">Western Governors University (WGU)</div>
+                    <p className="text-gray-700 text-[11px]">B.S. in Software Engineering (2026 – Expected 2028).</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">Instituto Privado Leonardo Da Vinci</div>
+                    <p className="text-gray-700 text-[11px]">Associate&apos;s Degree in Computer Science.</p>
+                  </div>
+                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                    <div className="font-bold text-[#000080]">Certifications</div>
+                    <p className="text-gray-700 text-[11px]">&bull; IBM: Creative & Critical Thinking | Google AI Essentials.</p>
+                  </div>
+                </div>
+                <div className="text-center pt-2">
+                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
+                </div>
+              </div>
+            )}
+
+          </div>
+
+          {/* STATUS BAR */}
+          <div className="bg-[#c0c0c0] px-2 py-1 border-t border-white text-[10px] sm:text-[11px] text-gray-800 flex justify-between">
+            <span>Status: Ready</span>
+            <span>Available for remote, hybrid or onsite positions</span>
+          </div>
+
+        </div>
+      </main>
+
+      {/* TASKBAR */}
+      <footer className="w-full bg-[#c0c0c0] border-t-2 border-white px-1 py-1 flex items-center justify-between text-xs z-40">
+        <div className="flex items-center gap-1">
+          <button 
+            onClick={() => setActiveWindow('home')}
+            className="px-2.5 py-1 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] font-bold flex items-center gap-1 text-xs"
+          >
+            <span>🪟</span> <span>Start</span>
+          </button>
+          
+          <div className="hidden sm:block h-5 w-[1px] bg-gray-500 mx-1"></div>
+
+          <div className="flex gap-1">
+            <button
+              onClick={() => setActiveWindow('home')}
+              className="px-2 py-1 bg-white border border-[#404040] text-[10px] font-bold truncate max-w-[90px]"
+            >
+              Desktop
+            </button>
+            <button
+              onClick={() => setActiveWindow('recruiter')}
+              className="px-2 py-1 bg-yellow-100 border border-[#404040] text-[10px] font-bold truncate max-w-[110px]"
+            >
+              ⭐ Note.msg
             </button>
           </div>
-          {expandedProject === 'portfolio' && (
-            <div className="px-8 pb-10 border-t border-gray-100 pt-8 animate-in slide-in-from-top-4 duration-500">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-10 mb-8 text-sm leading-relaxed text-gray-700">
-                <div className="space-y-4">
-                  <h4 className="text-lg font-bold text-red-600">The Objective</h4>
-                  <p>Engineer a high-performance technical showcase with automated deployment workflows.</p>
-                  <h4 className="text-lg font-bold text-green-600">Result</h4>
-                  <p>A serverless, high-speed platform with 100% automated CI/CD via Vercel.</p>
-                </div>
-                <div className="bg-gray-50 p-6 rounded-2xl">
-                  <h4 className="text-lg font-bold text-blue-800 mb-3">Stack</h4>
-                  <ul className="list-disc list-inside space-y-2 text-xs">
-                    <li>Framework: Next.js 15 & TypeScript.</li>
-                    <li>Deployment: GitHub CI/CD pipeline to Vercel.</li>
-                    <li>UI: Tailwind CSS & Framer Motion.</li>
-                  </ul>
-                </div>
-              </div>
-
-              {/* HOME IMAGE WITH LIGHTBOX CLICK */}
-              <div className="mt-8 mb-8 cursor-zoom-in group text-center" onClick={() => setSelectedImage('/images/johnreyna/home.jpg')}>
-                <img 
-                  src="/images/johnreyna/home.jpg" 
-                  alt="johnreyna.tech Home" 
-                  className="w-full max-w-2xl mx-auto rounded-xl border border-gray-200 shadow-xl group-hover:scale-[1.01] transition-transform duration-300"
-                />
-                <p className="text-[10px] text-gray-400 mt-3 font-mono uppercase tracking-widest italic">Click to view full size</p>
-              </div>
-              
-              <div className="bg-blue-900 rounded-xl p-4 text-white font-mono text-[10px] overflow-hidden shadow-inner text-left">
-                <p className="text-blue-300">// Automated Deployment Log</p>
-                <p>✓ Optimization: Compiled successfully</p>
-                <p>✓ GitHub Action: Triggered by push to (main)</p>
-                <p>✓ Vercel: Deploying to johnreyna.tech...</p>
-                <p className="text-green-400">✓ Production: Live</p>
-              </div>
-            </div>
-          )}
         </div>
-      </div>
 
-      {/* --- RESUME DOWNLOAD SECTION --- */}
-      <div className="w-full max-w-lg p-10 bg-white border-2 border-blue-100 rounded-3xl shadow-2xl text-center mb-16">
-        <h3 className="text-3xl font-bold mb-4">📄 Full Career History</h3>
-        <a href="/John_Reyna_Resume.pdf" download className="inline-block w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-5 px-10 rounded-2xl transition-all shadow-lg transform hover:-translate-y-1 text-lg">
-          Download PDF Resume
-        </a>
-      </div>
-      
+        <div className="flex items-center gap-2 px-1">
+          <div className="border border-[#404040] px-2 py-0.5 bg-[#f0f0f0] flex items-center gap-2 text-[10px] sm:text-[11px]">
+            <span>📞 <a href="tel:6893192244" className="hover:underline">(689) 319-2244</a></span>
+            <span className="hidden sm:inline">💬 <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-800 font-bold hover:underline">WhatsApp</a></span>
+            <span className="border-l border-gray-400 pl-1">{time}</span>
+          </div>
+        </div>
+      </footer>
     </div>
-  );
+  )
 }
