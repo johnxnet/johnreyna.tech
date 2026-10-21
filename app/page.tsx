@@ -1,15 +1,51 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
-type WindowKey = 'home' | 'experience' | 'cases' | 'skills' | 'education' | 'recruiter'
+type WindowKey = 'home' | 'experience' | 'cases' | 'skills' | 'education' | 'recruiter' | 'ai_chat'
+
+interface Message {
+  role: 'user' | 'assistant'
+  content: string
+}
+
+function TypewriterText({ text }: { text: string }) {
+  const [displayedText, setDisplayedText] = useState('')
+
+  useEffect(() => {
+    let i = 0
+    setDisplayedText('')
+    const timer = setInterval(() => {
+      if (i < text.length) {
+        setDisplayedText((prev) => prev + text.charAt(i))
+        i++
+      } else {
+        clearInterval(timer)
+      }
+    }, 12)
+
+    return () => clearInterval(timer)
+  }, [text])
+
+  return <span>{displayedText}</span>
+}
 
 export default function Home() {
   const [loading, setLoading] = useState(true)
   const [bootLogs, setBootLogs] = useState<string[]>([])
   const [activeWindow, setActiveWindow] = useState<WindowKey>('home')
-  const [selectedImage, setSelectedImage] = useState<string | null>(null)
   const [time, setTime] = useState('12:00 PM')
+  
+  const [messages, setMessages] = useState<Message[]>([
+    { role: 'assistant', content: 'JOHN_AI > SYSTEM AI ASSISTANT INITIALIZED. Ask me anything about my experience in E-Commerce, CMS Governance, Agile, or AI Automations!' }
+  ])
+  const [inputMessage, setInputMessage] = useState('')
+  const [isTyping, setIsTyping] = useState(false)
+  const chatEndRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }, [messages, isTyping])
 
   useEffect(() => {
     const logs = [
@@ -18,7 +54,7 @@ export default function Home() {
       'Loading Next.js 16 kernel (Turbopack compiler)...',
       'Mounting virtual filesystem (Rosetta Stone CMS)...',
       'Establishing secure connection to GitHub & Vercel...',
-      'System Ready. Launching Win2000 Desktop GUI...'
+      'System Ready. Launching Executive OS with AI Assistant...'
     ]
 
     let current = 0
@@ -28,9 +64,9 @@ export default function Home() {
         current++
       } else {
         clearInterval(interval)
-        setTimeout(() => setLoading(false), 500)
+        setTimeout(() => setLoading(false), 300)
       }
-    }, 300)
+    }, 250)
 
     return () => clearInterval(interval)
   }, [])
@@ -44,6 +80,31 @@ export default function Home() {
     const timer = setInterval(updateClock, 1000)
     return () => clearInterval(timer)
   }, [])
+
+  const handleSendMessage = async (e: React.FormEvent) => {
+    e.preventDefault()
+    if (!inputMessage.trim()) return
+
+    const userText = inputMessage.trim()
+    const newMessages = [...messages, { role: 'user' as const, content: userText }]
+    setMessages(newMessages)
+    setInputMessage('')
+    setIsTyping(true)
+
+    try {
+      const res = await fetch('/api/chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ messages: newMessages })
+      })
+      const data = await res.json()
+      setMessages([...newMessages, { role: 'assistant', content: data.reply }])
+    } catch (err) {
+      setMessages([...newMessages, { role: 'assistant', content: "Connection error with AI Assistant. Contact me directly at john.rear@gmail.com." }])
+    } finally {
+      setIsTyping(false)
+    }
+  }
 
   if (loading) {
     return (
@@ -61,410 +122,516 @@ export default function Home() {
   }
 
   return (
-    <div className="min-h-screen bg-[#008080] text-black font-mono flex flex-col justify-between select-none overflow-x-hidden">
+    <div className="min-h-screen bg-[#008080] text-black font-mono flex flex-col justify-between select-none overflow-x-hidden relative">
       
-      {/* MOBILE HEADER */}
-      <header className="bg-[#000080] text-white px-3 py-2 flex justify-between items-center text-xs border-b-2 border-white md:hidden">
-        <span className="font-bold">💻 John_Reyna_OS</span>
-        <span>{time}</span>
-      </header>
+      {/* Marca de agua estilo retro MS-DOS / Win98 en el fondo verde */}
+      <div className="absolute inset-0 flex flex-col items-center justify-start pt-10 pointer-events-none opacity-20 hidden sm:flex space-y-2">
+        <span className="text-[#004040] text-6xl font-black tracking-widest font-mono drop-shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">JOHNREYNA.TECH</span>
+        <span className="text-[#004040] text-sm font-bold tracking-widest font-mono">=== EXECUTIVE DIGITAL PLATFORM & WEB OPERATIONS OS ===</span>
+      </div>
 
-      {/* MAIN CONTAINER */}
-      <main className="flex-1 p-2 sm:p-6 flex flex-col items-center justify-center max-w-4xl mx-auto w-full">
+      {/* ========================================================= */}
+      {/* MOBILE VIEW: BLACKBERRY EXECUTIVE PDA STYLE (FULL HEIGHT) */}
+      {/* ========================================================= */}
+      <div className="block sm:hidden h-screen bg-[#1c1c1c] text-white p-2 flex flex-col justify-between font-sans overflow-hidden z-10">
         
-        {/* DESKTOP ICON GRID */}
-        <div className="w-full grid grid-cols-3 sm:grid-cols-5 gap-2 sm:gap-4 mb-4 px-1">
-          <button
-            onClick={() => setActiveWindow('experience')}
-            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
-          >
-            <span className="text-2xl mb-1">📁</span>
-            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Experience</span>
-          </button>
-
-          <button
-            onClick={() => setActiveWindow('cases')}
-            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
-          >
-            <span className="text-2xl mb-1">🗂️</span>
-            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Cases</span>
-          </button>
-
-          <button
-            onClick={() => setActiveWindow('skills')}
-            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
-          >
-            <span className="text-2xl mb-1">⚙️</span>
-            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Skills</span>
-          </button>
-
-          <button
-            onClick={() => setActiveWindow('education')}
-            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer"
-          >
-            <span className="text-2xl mb-1">📄</span>
-            <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black truncate w-full text-center">Education</span>
-          </button>
-
-          <button
-            onClick={() => setActiveWindow('recruiter')}
-            className="flex flex-col items-center p-2 bg-black/20 sm:bg-transparent hover:bg-[#000080]/40 border border-white/20 sm:border-transparent cursor-pointer col-span-3 sm:col-span-1"
-          >
-            <span className="text-2xl mb-1">⭐</span>
-            <span className="text-yellow-200 text-[10px] font-bold bg-[#800000] px-1 border border-black truncate w-full text-center animate-pulse">Recruiter.msg</span>
-          </button>
+        <div className="bg-[#111] border-b border-gray-800 px-3 py-1 flex justify-between items-center text-[10px] text-gray-400 font-mono shrink-0">
+          <span>📶 EDGE // JOHN_REYNA_OS</span>
+          <span>{time}</span>
+          <span>🔋 100%</span>
         </div>
 
-        {/* WINDOW CONTAINER */}
-        <div className="w-full bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] shadow-xl">
+        <div className="bg-[#000080] text-white py-2 px-3 text-center border-b-2 border-white shadow-md shrink-0">
+          <div className="text-xs font-bold text-yellow-300 tracking-wider">JOHN REYNA // PORTFOLIO</div>
+          <div className="text-[10px] text-gray-200">Digital Platform & Web Operations Specialist</div>
+        </div>
+
+        <div className="flex-1 bg-white text-black p-3 my-1 overflow-y-auto space-y-3 border-2 border-gray-600 shadow-inner flex flex-col">
           
-          {/* WINDOW TITLE BAR */}
-          <div className="bg-[#000080] px-2 py-1.5 flex justify-between items-center text-white font-bold text-xs">
-            <div className="flex items-center gap-1.5 truncate">
-              <span>💻</span>
-              <span className="truncate">John_Reyna_System_Manager.exe</span>
+          {activeWindow === 'home' && (
+            <div className="space-y-3 text-xs">
+              <div className="flex items-center gap-3 bg-gray-100 p-2 border border-gray-300">
+                <img src="/john-reyna.webp" alt="John Reyna" className="w-14 h-14 object-cover border border-black shrink-0" />
+                <div>
+                  <div className="font-extrabold text-sm text-black">John Reyna</div>
+                  <div className="text-[11px] text-blue-900 font-bold">Orlando, FL</div>
+                </div>
+              </div>
+              <p className="text-gray-800 leading-relaxed text-[11px]">
+                I am a digital platform and web operations specialist with 10 years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
+              </p>
+
+              <div className="space-y-1.5 pt-1 border-t border-gray-300 font-mono">
+                <div className="font-bold text-[10px] text-gray-600 uppercase">Directory / Navigation:</div>
+                <div className="grid grid-cols-2 gap-1.5">
+                  <button onClick={() => setActiveWindow('ai_chat')} className="p-2 bg-[#c0c0c0] text-black font-bold text-[11px] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left col-span-2 flex justify-between items-center">
+                    <span>⚡ Chat with my AI Assistant</span><span className="text-[10px] bg-purple-900 text-white px-1">Open ↗</span>
+                  </button>
+                  <button onClick={() => setActiveWindow('experience')} className="p-2 bg-[#c0c0c0] text-black font-bold text-[11px] border border-black text-left">📁 Experience</button>
+                  <button onClick={() => setActiveWindow('cases')} className="p-2 bg-[#c0c0c0] text-black font-bold text-[11px] border border-black text-left">🗂️ Cases</button>
+                  <button onClick={() => setActiveWindow('skills')} className="p-2 bg-[#c0c0c0] text-black font-bold text-[11px] border border-black text-left">⚙️ Skills</button>
+                  <button onClick={() => setActiveWindow('education')} className="p-2 bg-[#c0c0c0] text-black font-bold text-[11px] border border-black text-left">🎓 Education</button>
+                </div>
+                <button onClick={() => setActiveWindow('recruiter')} className="w-full p-2 bg-yellow-200 text-blue-900 font-bold text-[11px] border border-black text-center">
+                  ⭐ Recruiter Welcome Note
+                </button>
+              </div>
+
+              <div className="pt-2 border-t border-gray-300 flex flex-col gap-1 text-[11px] font-bold font-mono">
+                <a href="tel:6893192244" className="text-blue-700">📞 (689) 319-2244</a>
+                <a href="https://wa.me/16893192244" className="text-emerald-700">💬 WhatsApp Direct</a>
+                <a href="mailto:john.rear@gmail.com" className="text-blue-700">✉️ Email</a>
+                <a href="https://linkedin.com/in/johnreyna" className="text-blue-700">💼 LinkedIn</a>
+              </div>
             </div>
-            <div className="flex gap-1 shrink-0">
-              <button 
-                onClick={() => setActiveWindow('home')}
-                className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold"
-              >
-                _
-              </button>
-              <button 
-                onClick={() => setActiveWindow('home')}
-                className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold"
-              >
-                X
-              </button>
+          )}
+
+          {activeWindow === 'ai_chat' && (
+            <div className="space-y-2 text-xs flex-1 flex flex-col min-h-0">
+              <div className="flex justify-between items-center border-b border-purple-900 pb-1 font-mono shrink-0">
+                <span className="font-bold text-purple-900">💬 AI Assistant (Ask me anything)</span>
+                <button onClick={() => setActiveWindow('home')} className="px-2 py-0.5 bg-gray-200 border text-[10px] font-bold">X</button>
+              </div>
+              <div className="flex-1 bg-black text-green-400 p-3 overflow-y-auto space-y-3 font-mono text-[11px] border border-gray-700 min-h-0">
+                {messages.map((m, idx) => (
+                  <div key={idx} className={m.role === 'user' ? 'text-blue-300 text-right' : 'text-green-300'}>
+                    <span className="font-bold">{m.role === 'user' ? 'USER > ' : 'JOHN_AI > '}</span>
+                    {m.role === 'assistant' && idx === messages.length - 1 ? (
+                      <TypewriterText text={m.content} />
+                    ) : (
+                      <span>{m.content}</span>
+                    )}
+                  </div>
+                ))}
+                {isTyping && <div className="text-yellow-400">Consulting my professional background...</div>}
+                <div ref={chatEndRef} />
+              </div>
+              <form onSubmit={handleSendMessage} className="flex gap-1 shrink-0 pt-1">
+                <input
+                  type="text"
+                  value={inputMessage}
+                  onChange={(e) => setInputMessage(e.target.value)}
+                  placeholder="Ask me about my experience or projects..."
+                  className="flex-1 border border-gray-400 p-1.5 text-[11px] text-black font-mono bg-white"
+                />
+                <button type="submit" className="bg-purple-900 text-white px-3 py-1.5 font-bold text-[11px]">Send</button>
+              </form>
+              <button onClick={() => setActiveWindow('home')} className="w-full p-1.5 bg-gray-200 text-black font-bold border border-black font-mono text-center shrink-0">← Back to Menu</button>
             </div>
+          )}
+
+          {activeWindow === 'recruiter' && (
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">⭐ Recruiter_Welcome.msg</div>
+              <p className="text-[11px]"><strong>Hello and welcome to my portfolio! 🎯</strong></p>
+              <p className="text-[11px]">If you are evaluating candidates who can lead e-commerce architecture, govern complex CMS platforms, and connect engineering directly with business outcomes, here is why I am an ideal fit:</p>
+              <ul className="list-disc pl-4 space-y-1.5 text-[11px]">
+                <li><strong>Proven Impact:</strong> 10 years optimizing multi-site e-commerce ecosystems and AI automation pipelines.</li>
+                <li><strong>Availability:</strong> Based in Orlando, FL, available for remote, hybrid, or onsite roles.</li>
+                <li><strong>End-to-End Ownership:</strong> From custom PHP and Shopify Liquid to n8n automation, FastAPI, and Agile leadership.</li>
+              </ul>
+              <button onClick={() => setActiveWindow('home')} className="w-full mt-2 p-2 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
+            </div>
+          )}
+
+          {activeWindow === 'experience' && (
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🏢 Work Experience</div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">Web Platform & Digital Operations Consultant (Oct 2025–Present)</div>
+                <p className="text-[11px] text-gray-800">
+                  Providing consulting services to U.S. organizations. Leading technical delivery and governance for PHIL (AI SaaS at 201 Digital Group) managing GitHub, AWS, n8n automation, and Bricks/FastAPI interfaces. Developing custom Shopify Liquid features and optimization at NF Sports.
+                </p>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">Web Platform Manager — USA Tile and Marble, Miami, FL (Jan 2021–Jul 2025)</div>
+                <p className="text-[11px] text-gray-800">
+                  Owned multi-site WooCommerce ecosystems sharing inventory across 5 physical showrooms. Engineered custom square-feet (SF) to box calculators on product pages carrying values through cart and checkout. Built the centralized Rosetta Stone database and managed GA4, Google Ads, and SpeedSize Core Web Vitals.
+                </p>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys (Jan 2013–Dec 2020)</div>
+                <p className="text-[11px] text-gray-800">
+                  Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira and Agile workflows.
+                </p>
+              </div>
+              <button onClick={() => setActiveWindow('home')} className="w-full mt-2 p-2 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
+            </div>
+          )}
+
+          {activeWindow === 'cases' && (
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🚀 Case Studies & E-Commerce</div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">USA Tile & Marble</div>
+                <p className="text-[11px] text-gray-800">Multi-brand WooCommerce architecture, SF box calculators, and Rosetta Stone data base.</p>
+                <a href="https://itilemosaic.com" target="_blank" rel="noreferrer" className="text-blue-600 font-bold underline block text-[11px]">itilemosaic.com ↗</a>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">NF Sports & Fear The Lamb</div>
+                <p className="text-[11px] text-gray-800">Custom Shopify Liquid modules, predictive search, and subscription workflows.</p>
+                <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="text-blue-600 font-bold underline block text-[11px]">nfsports.com ↗</a>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">PHIL AI SaaS Platform</div>
+                <p className="text-[11px] text-gray-800">FastAPI backend integration, Swagger validation, and n8n workflow automation.</p>
+              </div>
+              <button onClick={() => setActiveWindow('home')} className="w-full mt-2 p-2 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
+            </div>
+          )}
+
+          {activeWindow === 'skills' && (
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🛠️ Core Competencies & Skills</div>
+              <div className="grid grid-cols-2 gap-2">
+                <div className="bg-gray-50 p-2 border border-gray-300">
+                  <div className="font-bold text-[#000080] mb-1">Platforms & CMS</div>
+                  <p className="text-[10px] text-gray-800">WordPress, WooCommerce, Shopify Liquid, Bricks Builder.</p>
+                </div>
+                <div className="bg-gray-50 p-2 border border-gray-300">
+                  <div className="font-bold text-[#000080] mb-1">Development</div>
+                  <p className="text-[10px] text-gray-800">PHP, JavaScript, HTML5, CSS3, REST APIs, FastAPI.</p>
+                </div>
+                <div className="bg-gray-50 p-2 border border-gray-300">
+                  <div className="font-bold text-[#000080] mb-1">Automation & QA</div>
+                  <p className="text-[10px] text-gray-800">n8n, Swagger, Git, GitHub, Quality Assurance, ACF.</p>
+                </div>
+                <div className="bg-gray-50 p-2 border border-gray-300">
+                  <div className="font-bold text-[#000080] mb-1">Operations & Growth</div>
+                  <p className="text-[10px] text-gray-800">GA4, Google Tag Manager, Jira, Agile, Web & E-commerce Ops.</p>
+                </div>
+              </div>
+              <button onClick={() => setActiveWindow('home')} className="w-full mt-2 p-2 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
+            </div>
+          )}
+
+          {activeWindow === 'education' && (
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🎓 Education & Certifications</div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">Western Governors University</div>
+                <p className="text-[11px] text-gray-800">Bachelor of Science in Software Engineering, 2026 – Expected 2028.</p>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">Instituto Privado Leonardo Da Vinci</div>
+                <p className="text-[11px] text-gray-800">Associate&apos;s Degree in Computer Science (Credential evaluation by Josef Silny & Associates).</p>
+              </div>
+              <div className="bg-gray-50 p-2.5 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080]">Certifications</div>
+                <p className="text-[11px] text-gray-800">
+                  • Google AI Essentials — Google, Sep 2025<br/>
+                  • Solving Problems with Creative and Critical Thinking — IBM, Feb 2026
+                </p>
+              </div>
+              <button onClick={() => setActiveWindow('home')} className="w-full mt-2 p-2 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
+            </div>
+          )}
+        </div>
+
+        <div className="bg-[#111] p-1.5 text-center text-[10px] text-gray-400 border-t border-gray-800 font-mono shrink-0">
+          BlackBerry Executive Edition // John Reyna OS
+        </div>
+      </div>
+
+
+      {/* ========================================================= */}
+      {/* DESKTOP VIEW: WINDOWS 2000 RETRO OS                     */}
+      {/* ========================================================= */}
+      <div className="hidden sm:flex flex-col justify-between min-h-screen z-10">
+        <main className="flex-1 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto w-full">
+          
+          <div className="w-full grid grid-cols-6 gap-3 mb-4 px-1">
+            {/* Botón de la IA rediseñado con el estilo clásico exacto de Windows 2000 */}
+            <button onClick={() => setActiveWindow('ai_chat')} className="flex flex-col items-center p-2 bg-[#c0c0c0] hover:bg-gray-300 border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] cursor-pointer col-span-1 shadow-md active:border-t-[#404040] active:border-l-[#404040] active:border-r-white active:border-b-white">
+              <span className="text-2xl mb-1">⚡</span>
+              <span className="text-black text-[10px] font-bold bg-[#c0c0c0] px-1 border border-black w-full text-center truncate">AI_Copilot</span>
+            </button>
+            <button onClick={() => setActiveWindow('experience')} className="flex flex-col items-center p-2 hover:bg-[#000080]/40 border border-transparent hover:border-dotted hover:border-white cursor-pointer">
+              <span className="text-2xl mb-1">📁</span>
+              <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black w-full text-center">Experience</span>
+            </button>
+            <button onClick={() => setActiveWindow('cases')} className="flex flex-col items-center p-2 hover:bg-[#000080]/40 border border-transparent hover:border-dotted hover:border-white cursor-pointer">
+              <span className="text-2xl mb-1">🗂️</span>
+              <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black w-full text-center">Cases</span>
+            </button>
+            <button onClick={() => setActiveWindow('skills')} className="flex flex-col items-center p-2 hover:bg-[#000080]/40 border border-transparent hover:border-dotted hover:border-white cursor-pointer">
+              <span className="text-2xl mb-1">⚙️</span>
+              <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black w-full text-center">Skills</span>
+            </button>
+            <button onClick={() => setActiveWindow('education')} className="flex flex-col items-center p-2 hover:bg-[#000080]/40 border border-transparent hover:border-dotted hover:border-white cursor-pointer">
+              <span className="text-2xl mb-1">📄</span>
+              <span className="text-white text-[10px] font-bold bg-[#000080] px-1 border border-black w-full text-center">Education</span>
+            </button>
+            <button onClick={() => setActiveWindow('recruiter')} className="flex flex-col items-center p-2 hover:bg-[#000080]/40 border border-transparent hover:border-dotted hover:border-white cursor-pointer">
+              <span className="text-2xl mb-1">⭐</span>
+              <span className="text-yellow-200 text-[10px] font-bold bg-[#800000] px-1 border border-black w-full text-center animate-pulse">Recruiter.msg</span>
+            </button>
           </div>
 
-          {/* MENU BAR */}
-          <div className="bg-[#c0c0c0] px-2 py-1 border-b border-[#808080] text-[11px] hidden sm:flex gap-4 text-black">
-            <span>File</span>
-            <span>Edit</span>
-            <span>View</span>
-            <span>Help</span>
-          </div>
+          <div className="w-full bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] shadow-xl">
+            <div className="bg-[#000080] px-2 py-1.5 flex justify-between items-center text-white font-bold text-xs">
+              <div className="flex items-center gap-1.5"><span>💻</span><span>John_Reyna_System_Manager.exe</span></div>
+              <div className="flex gap-1">
+                <button onClick={() => setActiveWindow('home')} className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold">_</button>
+                <button onClick={() => setActiveWindow('home')} className="bg-[#c0c0c0] text-black px-2 border border-black text-xs font-extrabold">X</button>
+              </div>
+            </div>
 
-          {/* WINDOW CONTENT AREA */}
-          <div className="p-3 sm:p-6 bg-[#ffffff] text-black space-y-4 min-h-[360px] max-h-[70vh] overflow-y-auto border-2 border-inset border-[#808080] m-1 sm:m-2">
+            <div className="bg-[#c0c0c0] px-2 py-1 border-b border-[#808080] text-[11px] flex gap-4 text-black">
+              <span>File</span><span>Edit</span><span>View</span><span>Help</span>
+            </div>
 
-            {/* HOME VIEW */}
-            {activeWindow === 'home' && (
-              <div className="space-y-4">
-                <div className="flex flex-col sm:flex-row items-center gap-4 bg-[#f5f5f5] p-3 border border-gray-400">
-                  <img
-                    src="/john-reyna.webp"
-                    alt="John Reyna"
-                    className="w-20 h-20 sm:w-28 sm:h-28 object-cover border-2 border-black shrink-0"
-                  />
-                  <div className="space-y-2 text-center sm:text-left w-full">
-                    <div className="bg-[#000080] text-white px-2 py-0.5 text-[11px] inline-block font-bold">
-                      Digital Platform & Web Operations Specialist
+            <div className="p-6 bg-[#ffffff] text-black space-y-4 min-h-[560px] max-h-[760px] overflow-y-auto border-2 border-inset border-[#808080] m-2">
+              
+              {activeWindow === 'ai_chat' && (
+                <div className="space-y-4 font-mono flex flex-col h-[520px]">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-purple-900">💬 AI Assistant (Interactive Knowledge Base)</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close [X]</button>
+                  </div>
+                  
+                  <div className="flex-1 bg-black text-green-400 p-4 overflow-y-auto space-y-3 text-xs border-2 border-inset border-gray-600 shadow-inner">
+                    {messages.map((m, idx) => (
+                      <div key={idx} className={m.role === 'user' ? 'text-blue-300 text-right' : 'text-green-300'}>
+                        <span className="font-bold">{m.role === 'user' ? 'USER > ' : 'JOHN_AI > '}</span>
+                        {m.role === 'assistant' && idx === messages.length - 1 ? (
+                          <TypewriterText text={m.content} />
+                        ) : (
+                          <span>{m.content}</span>
+                        )}
+                      </div>
+                    ))}
+                    {isTyping && <div className="text-yellow-400">Consulting my professional background...</div>}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  <form onSubmit={handleSendMessage} className="flex gap-2">
+                    <input
+                      type="text"
+                      value={inputMessage}
+                      onChange={(e) => setInputMessage(e.target.value)}
+                      placeholder="Ask me about my experience or projects..."
+                      className="flex-1 border-2 border-gray-500 p-2.5 text-xs text-black font-mono bg-gray-50"
+                    />
+                    <button type="submit" className="bg-purple-900 text-white px-5 py-2.5 font-bold text-xs hover:bg-purple-800">Send Query</button>
+                  </form>
+
+                  <div className="text-center pt-1">
+                    <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back to Desktop</button>
+                  </div>
+                </div>
+              )}
+
+              {activeWindow === 'home' && (
+                <div className="space-y-4">
+                  <div className="flex items-center gap-6 bg-[#f5f5f5] p-4 border border-gray-400">
+                    <img src="/john-reyna.webp" alt="John Reyna" className="w-28 h-28 object-cover border-2 border-black shrink-0" />
+                    <div className="space-y-2 w-full">
+                      <div className="bg-[#000080] text-white px-2 py-0.5 text-[11px] inline-block font-bold">Digital Platform & Web Operations Specialist</div>
+                      <h1 className="text-2xl font-extrabold text-black">John Reyna</h1>
+                      <p className="text-sm text-gray-800 font-sans leading-relaxed">
+                        I am a digital platform and web operations specialist with 10 years of experience driving performance optimization, e-commerce solutions, and digital initiatives.
+                      </p>
+                      <div className="text-[11px] font-bold text-gray-700 flex items-center gap-x-3 pt-1 border-t border-gray-300">
+                        <span>📍 Orlando, FL</span><span>•</span>
+                        <a href="tel:6893192244" className="text-blue-700 hover:underline">📞 (689) 319-2244</a><span>•</span>
+                        <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp</a><span>•</span>
+                        <a href="mailto:john.rear@gmail.com" className="text-blue-700 hover:underline">✉️ Email</a><span>•</span>
+                        <a href="https://linkedin.com/in/johnreyna" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">💼 LinkedIn</a>
+                      </div>
                     </div>
-                    <h1 className="text-lg sm:text-2xl font-extrabold text-black">
-                      John Reyna
-                    </h1>
-                    <p className="text-xs sm:text-sm text-gray-800 font-sans leading-relaxed">
-                      10+ years driving e-commerce optimization, shopping experiences, multi-site CMS governance, and cross-functional agile delivery.
-                    </p>
-                    
-                    {/* CLICKEABLE CONTACT INFO BAR */}
-                    <div className="text-[11px] font-bold text-gray-700 flex flex-wrap justify-center sm:justify-start items-center gap-x-3 gap-y-1 pt-1 border-t border-gray-300">
-                      <span>📍 Orlando, FL</span>
-                      <span>•</span>
+                  </div>
+
+                  <div className="space-y-2">
+                    <div className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">📁 SELECT DIRECTORY / SECTION:</div>
+                    <div className="grid grid-cols-2 gap-2">
+                      <button onClick={() => setActiveWindow('ai_chat')} className="p-3 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center col-span-2 shadow-md">
+                        <span className="text-black font-bold">⚡ Chat with my AI Assistant ➔ Ask me anything!</span><span className="text-white bg-[#000080] px-2 py-0.5 border border-black text-[10px]">Launch 🚀</span>
+                      </button>
+                      <button onClick={() => setActiveWindow('experience')} className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center">
+                        <span>🏢 Work Experience & Leadership</span><span className="text-[10px] bg-white px-1 border">Open</span>
+                      </button>
+                      <button onClick={() => setActiveWindow('cases')} className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center">
+                        <span>🚀 Case Studies & E-Commerce</span><span className="text-[10px] bg-white px-1 border">Open</span>
+                      </button>
+                      <button onClick={() => setActiveWindow('skills')} className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center">
+                        <span>🛠️ Core Competencies Matrix</span><span className="text-[10px] bg-white px-1 border">Open</span>
+                      </button>
+                      <button onClick={() => setActiveWindow('education')} className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center">
+                        <span>🎓 Education & Credentials</span><span className="text-[10px] bg-white px-1 border">Open</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="flex justify-center gap-2 pt-2">
+                    <a href="/John_Reyna_Resume.pdf" target="_blank" rel="noreferrer" className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold hover:bg-gray-300">📄 Download Resume (PDF)</a>
+                    <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-emerald-900 hover:bg-gray-300">💬 WhatsApp Direct</a>
+                    <button onClick={() => setActiveWindow('recruiter')} className="px-3 py-2 bg-yellow-100 border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-blue-900">⭐ Recruiter Welcome Note</button>
+                  </div>
+                </div>
+              )}
+
+              {activeWindow === 'recruiter' && (
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-[#000080]">⭐ Recruiter_Welcome.msg (Direct Brief)</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close [X]</button>
+                  </div>
+                  <div className="bg-[#ffffe1] p-4 border border-gray-400 space-y-3 text-sm text-gray-900 shadow-inner">
+                    <p className="font-bold text-blue-900 text-base">Hello, Hiring Manager! 🎯</p>
+                    <p>If you are evaluating candidates who can lead e-commerce architecture, govern complex CMS platforms, and connect engineering directly with business outcomes, here is why I am an excellent addition to your team:</p>
+                    <p><strong>Why I am a strong fit:</strong></p>
+                    <ul className="list-disc pl-4 space-y-1.5">
+                      <li><strong>Proven Impact:</strong> Direct ownership of large-scale multi-site e-commerce ecosystems, custom purchasing workflows, and AI automation pipelines.</li>
+                      <li><strong>Strategic Availability:</strong> Based in Orlando, FL, fully available for remote, hybrid, or onsite collaboration.</li>
+                      <li><strong>End-to-End Ownership:</strong> From custom PHP and Shopify Liquid to cloud governance and cross-functional Agile leadership.</li>
+                    </ul>
+                    <div className="flex flex-wrap gap-3 font-bold text-xs pt-2 border-t border-gray-300">
                       <a href="tel:6893192244" className="text-blue-700 hover:underline">📞 (689) 319-2244</a>
-                      <span>•</span>
-                      <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp</a>
-                      <span>•</span>
+                      <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp Direct</a>
                       <a href="mailto:john.rear@gmail.com" className="text-blue-700 hover:underline">✉️ Email</a>
-                      <span>•</span>
-                      <a href="https://linkedin.com/in/johnreyna" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">💼 LinkedIn</a>
                     </div>
                   </div>
+                  <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back to Desktop</button></div>
                 </div>
+              )}
 
-                {/* DIRECTORY BUTTONS */}
-                <div className="space-y-2">
-                  <div className="text-[11px] font-bold text-gray-700 uppercase tracking-wider">
-                    📁 SELECT DIRECTORY / SECTION:
+              {activeWindow === 'experience' && (
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-[#000080]">🏢 Work Experience & Leadership</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
                   </div>
-                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                    <button
-                      onClick={() => setActiveWindow('experience')}
-                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
-                    >
-                      <span>🏢 Work Experience & Leadership</span>
-                      <span className="text-[10px] bg-white px-1 border">Open</span>
-                    </button>
-
-                    <button
-                      onClick={() => setActiveWindow('cases')}
-                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
-                    >
-                      <span>🚀 Case Studies & E-Commerce</span>
-                      <span className="text-[10px] bg-white px-1 border">Open</span>
-                    </button>
-
-                    <button
-                      onClick={() => setActiveWindow('skills')}
-                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
-                    >
-                      <span>🛠️ Core Competencies Matrix</span>
-                      <span className="text-[10px] bg-white px-1 border">Open</span>
-                    </button>
-
-                    <button
-                      onClick={() => setActiveWindow('education')}
-                      className="p-2.5 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-left hover:bg-gray-300 font-bold text-xs flex justify-between items-center"
-                    >
-                      <span>🎓 Education & Credentials</span>
-                      <span className="text-[10px] bg-white px-1 border">Open</span>
-                    </button>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row justify-center gap-2 pt-2">
-                  <a
-                    href="/John_Reyna_Resume.pdf"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center hover:bg-gray-300"
-                  >
-                    📄 Download Resume (PDF)
-                  </a>
-                  <a
-                    href="https://wa.me/16893192244"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="px-3 py-2 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center text-emerald-900 hover:bg-gray-300"
-                  >
-                    💬 WhatsApp Direct
-                  </a>
-                  <button
-                    onClick={() => setActiveWindow('recruiter')}
-                    className="px-3 py-2 bg-yellow-100 border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] text-xs font-bold text-center text-blue-900 animate-pulse"
-                  >
-                    ⭐ Recruiter Welcome Note
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* RECRUITER WELCOME NOTE */}
-            {activeWindow === 'recruiter' && (
-              <div className="space-y-4 font-sans">
-                <div className="flex justify-between items-center border-b border-black pb-2">
-                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">⭐ Recruiter_Welcome.msg (Direct Brief)</h2>
-                  <button 
-                    onClick={() => setActiveWindow('home')}
-                    className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono"
-                  >
-                    Close [X]
-                  </button>
-                </div>
-
-                <div className="bg-[#ffffe1] p-4 border border-gray-400 space-y-3 text-xs sm:text-sm text-gray-900 shadow-inner font-sans">
-                  <p className="font-bold text-blue-900">
-                    Hello! Welcome to my interactive portfolio.
-                  </p>
-                  <p>
-                    If you are reviewing my profile for a Product, E-Commerce, or Web Operations role, here is why I am an immediate fit for your team:
-                  </p>
-                  <ul className="list-disc pl-4 space-y-1.5">
-                    <li><strong>Strategic Location:</strong> Based in Orlando / Celebration, FL[cite: 6], fully available for hybrid, on-site, or remote collaboration.</li>
-                    <li><strong>Proven Track Record:</strong> 10+ years driving large-scale e-commerce, multi-site CMS governance, promotional rules, and product delivery.</li>
-                    <li><strong>Cross-Functional Alignment:</strong> Experienced in bridging Marketing, Revenue, Legal, Design, and Engineering stakeholders.</li>
-                  </ul>
-                  <p className="pt-2 border-t border-yellow-300 font-semibold text-gray-800">
-                    Let&apos;s connect directly:
-                  </p>
-                  <div className="flex flex-wrap gap-3 font-bold text-xs">
-                    <a href="tel:6893192244" className="text-blue-700 hover:underline">📞 (689) 319-2244</a>
-                    <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-700 hover:underline">💬 WhatsApp</a>
-                    <a href="mailto:john.rear@gmail.com" className="text-blue-700 hover:underline">✉️ Email</a>
-                    <a href="https://linkedin.com/in/johnreyna" target="_blank" rel="noreferrer" className="text-blue-700 hover:underline">💼 LinkedIn</a>
-                  </div>
-                </div>
-
-                <div className="text-center pt-2">
-                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">
-                    &lt;&lt; Back to Desktop
-                  </button>
-                </div>
-              </div>
-            )}
-
-            {/* EXPERIENCE VIEW */}
-            {activeWindow === 'experience' && (
-              <div className="space-y-4 font-sans">
-                <div className="flex justify-between items-center border-b border-black pb-2">
-                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🏢 Work Experience</h2>
-                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
-                </div>
-                <div className="space-y-3 text-xs sm:text-sm">
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
-                    <div className="font-bold text-[#000080]">Web Platform & Digital Operations Consultant (2025–Present)</div>
-                    <p className="text-gray-800 text-xs">Technical delivery for PHIL AI SaaS (201 Digital Group) and Shopify feature development at NF Sports.</p>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
-                    <div className="font-bold text-[#000080]">Web Platform Manager — USA Tile & Marble (2021–2025)</div>
-                    <p className="text-gray-800 text-xs">Managed multi-site WooCommerce ecosystems, checkout rules, and &ldquo;Rosetta Stone&rdquo; centralized CMS architecture.</p>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1">
-                    <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys (2013–2020)</div>
-                    <p className="text-gray-800 text-xs">Led distributed developer teams across South America, managing Jira agile workflows.</p>
-                  </div>
-                </div>
-                <div className="text-center pt-2">
-                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
-                </div>
-              </div>
-            )}
-
-            {/* CASES VIEW */}
-            {activeWindow === 'cases' && (
-              <div className="space-y-4 font-sans">
-                <div className="flex justify-between items-center border-b border-black pb-2">
-                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🚀 Case Studies</h2>
-                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
-                </div>
-                <div className="space-y-3 text-xs sm:text-sm">
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
-                    <div>
-                      <div className="font-bold text-[#000080]">USA Tile & Marble</div>
-                      <p className="text-gray-800 text-[11px]">Centralized product governance & checkout optimization.</p>
+                  <div className="space-y-3 text-sm">
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Web Platform & Digital Operations Consultant (Oct 2025–Present)</div>
+                      <p className="text-gray-800 text-xs">
+                        Providing ongoing consulting services to U.S.-based organizations across web platforms, e-commerce, automation, and digital operations. Direct technical delivery and governance for PHIL (multi-tenant AI SaaS platform at 201 Digital Group) managing GitHub, AWS, access controls, n8n automation, frontend Bricks/WordPress/FastAPI, and Swagger validation. Developed custom Shopify Liquid features, responsive landing pages, and subscription-flow optimization at NF Sports.
+                      </p>
                     </div>
-                    <a href="https://itilemosaic.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
-                    <div>
-                      <div className="font-bold text-[#000080]">NF Sports & Fear The Lamb</div>
-                      <p className="text-gray-800 text-[11px]">Shopify Liquid custom modules & subscription flows.</p>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Web Platform Manager — USA Tile and Marble, Miami, FL (Jan 2021–Jul 2025)</div>
+                      <p className="text-gray-800 text-xs">
+                        Owned and optimized multi-site WooCommerce ecosystems supporting multiple brands with shared inventory across online and physical showrooms. Engineered custom square-feet (SF) to box calculators on product pages carrying values through cart (cart.php), checkout, and confirmation emails. Built centralized Rosetta Stone database for product data, SKUs, and SEO metadata. Managed GA4, Google Ads, Merchant Center feeds, and SpeedSize Core Web Vitals optimization.
+                      </p>
                     </div>
-                    <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center gap-2">
-                    <div>
-                      <div className="font-bold text-[#000080]">PHIL AI SaaS Platform</div>
-                      <p className="text-gray-800 text-[11px]">FastAPI integration & n8n automation.</p>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys, Chicago, IL (Jan 2013–Dec 2020)</div>
+                      <p className="text-gray-800 text-xs">
+                        Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira Agile workflows, CRM integrations, and reliable production launches.
+                      </p>
                     </div>
-                    <a href="https://visionbridgelogistics.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-[11px] font-bold shrink-0">Visit ↗</a>
                   </div>
+                  <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
                 </div>
-                <div className="text-center pt-2">
-                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* SKILLS VIEW */}
-            {activeWindow === 'skills' && (
-              <div className="space-y-4 font-sans">
-                <div className="flex justify-between items-center border-b border-black pb-2">
-                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🛠️ Core Competencies</h2>
-                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+              {activeWindow === 'cases' && (
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-[#000080]">🚀 Case Studies & E-Commerce</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                  </div>
+                  <div className="space-y-3 text-sm">
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center">
+                      <div><div className="font-bold text-[#000080]">USA Tile & Marble</div><p className="text-gray-800 text-xs">Multi-brand WooCommerce architecture, SF box calculator, custom cart/checkout hooks, ACF, WP Sheet Editor & Rosetta Stone data architecture.</p></div>
+                      <a href="https://itilemosaic.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold shrink-0">Visit ↗</a>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center">
+                      <div><div className="font-bold text-[#000080]">NF Sports & Fear The Lamb</div><p className="text-gray-800 text-xs">Shopify Liquid custom storefront modules, predictive search, and subscription workflows.</p></div>
+                      <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold shrink-0">Visit ↗</a>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center">
+                      <div><div className="font-bold text-[#000080]">PHIL AI SaaS Platform</div><p className="text-gray-800 text-xs">FastAPI backend integration, Swagger validation & n8n workflow automation.</p></div>
+                      <a href="https://visionbridgelogistics.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold shrink-0">Visit ↗</a>
+                    </div>
+                  </div>
+                  <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">E-Commerce & CMS</div>
-                    <p className="text-gray-700 text-[11px]">WooCommerce, Shopify Liquid, WordPress, ACF.</p>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">Product & Agile QA</div>
-                    <p className="text-gray-700 text-[11px]">Jira Sprints, User Stories, End-to-End QA.</p>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">APIs & AI Stack</div>
-                    <p className="text-gray-700 text-[11px]">REST APIs, Swagger, n8n, Next.js 16, TypeScript.</p>
-                  </div>
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">Analytics & CRO</div>
-                    <p className="text-gray-700 text-[11px]">GA4, Google Tag Manager, Hotjar Heatmaps.</p>
-                  </div>
-                </div>
-                <div className="text-center pt-2">
-                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
-                </div>
-              </div>
-            )}
+              )}
 
-            {/* EDUCATION VIEW */}
-            {activeWindow === 'education' && (
-              <div className="space-y-4 font-sans">
-                <div className="flex justify-between items-center border-b border-black pb-2">
-                  <h2 className="font-extrabold text-xs sm:text-sm text-[#000080]">🎓 Education & Credentials</h2>
-                  <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
-                </div>
-                <div className="space-y-3 text-xs">
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">Western Governors University (WGU)</div>
-                    <p className="text-gray-700 text-[11px]">B.S. in Software Engineering (2026 – Expected 2028).</p>
+              {activeWindow === 'skills' && (
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-[#000080]">🛠️ Core Competencies & Tooling</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
                   </div>
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">Instituto Privado Leonardo Da Vinci</div>
-                    <p className="text-gray-700 text-[11px]">Associate&apos;s Degree in Computer Science.</p>
+                  <div className="grid grid-cols-2 gap-3">
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080] mb-1 text-xs">Platforms & CMS</div>
+                      <p className="text-gray-800 text-xs">WordPress, WooCommerce, Shopify Liquid, Bricks Builder.</p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080] mb-1 text-xs">Development & Languages</div>
+                      <p className="text-gray-800 text-xs">PHP, JavaScript, HTML5, CSS3, REST APIs, FastAPI.</p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080] mb-1 text-xs">Automation & QA</div>
+                      <p className="text-gray-800 text-xs">n8n, Swagger, Git, GitHub, Quality Assurance, ACF.</p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
+                      <div className="font-bold text-[#000080] mb-1 text-xs">Operations & Analytics</div>
+                      <p className="text-gray-800 text-xs">Google Analytics 4, Google Tag Manager, Jira, Agile, Web Ops.</p>
+                    </div>
                   </div>
-                  <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
-                    <div className="font-bold text-[#000080]">Certifications</div>
-                    <p className="text-gray-700 text-[11px]">&bull; IBM: Creative & Critical Thinking | Google AI Essentials.</p>
-                  </div>
+                  <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
                 </div>
-                <div className="text-center pt-2">
-                  <button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button>
-                </div>
-              </div>
-            )}
+              )}
 
+              {activeWindow === 'education' && (
+                <div className="space-y-4 font-sans">
+                  <div className="flex justify-between items-center border-b border-black pb-2">
+                    <h2 className="font-extrabold text-sm text-[#000080]">🎓 Education & Credentials</h2>
+                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
+                  </div>
+                  <div className="space-y-3 text-xs">
+                    <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Western Governors University</div>
+                      <p className="text-gray-700 text-[11px]">Bachelor of Science in Software Engineering, 2026 – Expected 2028.</p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Instituto Privado Leonardo Da Vinci</div>
+                      <p className="text-gray-700 text-[11px]">Associate&apos;s Degree in Computer Science (Credential evaluation by Josef Silny & Associates).</p>
+                    </div>
+                    <div className="bg-[#f9f9f9] p-2.5 border border-gray-300">
+                      <div className="font-bold text-[#000080]">Certifications</div>
+                      <p className="text-gray-700 text-[11px]">
+                        • Google AI Essentials — Google, Sep 2025<br/>
+                        • Solving Problems with Creative and Critical Thinking — IBM, Feb 2026
+                      </p>
+                    </div>
+                  </div>
+                  <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
+                </div>
+              )}
+            </div>
+
+            <div className="bg-[#c0c0c0] px-2 py-1 border-t border-white text-[11px] text-gray-800 flex justify-between">
+              <span>Status: Ready</span>
+              <span>Available for remote, hybrid or onsite positions</span>
+            </div>
           </div>
+        </main>
 
-          {/* STATUS BAR */}
-          <div className="bg-[#c0c0c0] px-2 py-1 border-t border-white text-[10px] sm:text-[11px] text-gray-800 flex justify-between">
-            <span>Status: Ready</span>
-            <span>Available for remote, hybrid or onsite positions</span>
+        <footer className="w-full bg-[#c0c0c0] border-t-2 border-white px-1 py-1 flex items-center justify-between text-xs z-40">
+          <div className="flex items-center gap-1">
+            <button onClick={() => setActiveWindow('home')} className="px-2.5 py-1 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] font-bold flex items-center gap-1 text-xs"><span>🪟</span> <span>Start</span></button>
+            <div className="h-5 w-[1px] bg-gray-500 mx-1"></div>
+            <div className="flex gap-1">
+              <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-white border border-[#404040] text-[10px] font-bold truncate max-w-[90px]">Desktop</button>
+              <button onClick={() => setActiveWindow('ai_chat')} className="px-2 py-1 bg-purple-200 border border-purple-800 text-[10px] font-bold truncate max-w-[90px]">💬 AI Copilot</button>
+            </div>
           </div>
-
-        </div>
-      </main>
-
-      {/* TASKBAR */}
-      <footer className="w-full bg-[#c0c0c0] border-t-2 border-white px-1 py-1 flex items-center justify-between text-xs z-40">
-        <div className="flex items-center gap-1">
-          <button 
-            onClick={() => setActiveWindow('home')}
-            className="px-2.5 py-1 bg-[#c0c0c0] border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] font-bold flex items-center gap-1 text-xs"
-          >
-            <span>🪟</span> <span>Start</span>
-          </button>
-          
-          <div className="hidden sm:block h-5 w-[1px] bg-gray-500 mx-1"></div>
-
-          <div className="flex gap-1">
-            <button
-              onClick={() => setActiveWindow('home')}
-              className="px-2 py-1 bg-white border border-[#404040] text-[10px] font-bold truncate max-w-[90px]"
-            >
-              Desktop
-            </button>
-            <button
-              onClick={() => setActiveWindow('recruiter')}
-              className="px-2 py-1 bg-yellow-100 border border-[#404040] text-[10px] font-bold truncate max-w-[110px]"
-            >
-              ⭐ Note.msg
-            </button>
+          <div className="flex items-center gap-2 px-1">
+            <div className="border border-[#404040] px-2 py-0.5 bg-[#f0f0f0] flex items-center gap-2 text-[11px]">
+              <span>📞 <a href="tel:6893192244" className="hover:underline">(689) 319-2244</a></span>
+              <span>💬 <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-800 font-bold hover:underline">WhatsApp</a></span>
+              <span className="border-l border-gray-400 pl-1">{time}</span>
+            </div>
           </div>
-        </div>
+        </footer>
+      </div>
 
-        <div className="flex items-center gap-2 px-1">
-          <div className="border border-[#404040] px-2 py-0.5 bg-[#f0f0f0] flex items-center gap-2 text-[10px] sm:text-[11px]">
-            <span>📞 <a href="tel:6893192244" className="hover:underline">(689) 319-2244</a></span>
-            <span className="hidden sm:inline">💬 <a href="https://wa.me/16893192244" target="_blank" rel="noreferrer" className="text-emerald-800 font-bold hover:underline">WhatsApp</a></span>
-            <span className="border-l border-gray-400 pl-1">{time}</span>
-          </div>
-        </div>
-      </footer>
     </div>
   )
 }
