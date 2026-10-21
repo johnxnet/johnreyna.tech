@@ -13,11 +13,13 @@ function TypewriterText({ text }: { text: string }) {
   const [displayedText, setDisplayedText] = useState('')
 
   useEffect(() => {
+    if (!text) return
     let i = 0
     setDisplayedText('')
+    
     const timer = setInterval(() => {
       if (i < text.length) {
-        setDisplayedText((prev) => prev + text.charAt(i))
+        setDisplayedText(text.substring(0, i + 1))
         i++
       } else {
         clearInterval(timer)
@@ -36,9 +38,10 @@ export default function Home() {
   const [activeWindow, setActiveWindow] = useState<WindowKey>('home')
   const [time, setTime] = useState('12:00 PM')
   
-  const [messages, setMessages] = useState<Message[]>([
-    { role: 'assistant', content: 'SYSTEM AI ASSISTANT INITIALIZED. Ask me anything about my experience in E-Commerce, CMS Governance, Agile, or AI Automations!' }
-  ])
+  const initialMessages: Message[] = [
+    { role: 'assistant', content: 'SYSTEM AI ASSISTANT INITIALIZED. Ask me anything about my 20-year career history, e-commerce architecture, leadership, or AI automations!' }
+  ]
+  const [messages, setMessages] = useState<Message[]>(initialMessages)
   const [inputMessage, setInputMessage] = useState('')
   const [isTyping, setIsTyping] = useState(false)
   const chatEndRef = useRef<HTMLDivElement>(null)
@@ -81,11 +84,11 @@ export default function Home() {
     return () => clearInterval(timer)
   }, [])
 
-  const handleSendMessage = async (e: React.FormEvent) => {
-    e.preventDefault()
-    if (!inputMessage.trim()) return
+  const handleSendMessage = async (textToSend?: string) => {
+    const text = textToSend || inputMessage
+    if (!text.trim()) return
 
-    const userText = inputMessage.trim()
+    const userText = text.trim()
     const newMessages = [...messages, { role: 'user' as const, content: userText }]
     setMessages(newMessages)
     setInputMessage('')
@@ -113,6 +116,10 @@ export default function Home() {
     }
   }
 
+  const resetChat = () => {
+    setMessages(initialMessages)
+  }
+
   if (loading) {
     return (
       <div className="min-h-screen bg-black text-green-400 font-mono p-6 flex flex-col justify-center max-w-lg mx-auto">
@@ -131,10 +138,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#008080] text-black font-mono flex flex-col justify-between select-none overflow-x-hidden relative">
       
-      {/* Background Retro Watermark */}
-      <div className="absolute inset-0 flex flex-col items-center justify-start pt-10 pointer-events-none opacity-20 hidden sm:flex space-y-2">
-        <span className="text-[#004040] text-6xl font-black tracking-widest font-mono drop-shadow-[2px_2px_0px_rgba(255,255,255,0.3)]">JOHNREYNA.TECH</span>
-        <span className="text-[#004040] text-sm font-bold tracking-widest font-mono">=== EXECUTIVE DIGITAL PLATFORM & WEB OPERATIONS OS ===</span>
+      {/* Background Retro Watermark: Centrado, nítido y con diseño limpio */}
+      <div className="absolute top-4 left-1/2 -translate-x-1/2 hidden sm:flex flex-col items-center pointer-events-none z-0">
+        <h1 className="text-white text-3xl font-extrabold tracking-widest font-mono drop-shadow-[3px_3px_0px_rgba(0,0,0,0.6)]">
+          JOHNREYNA.TECH
+        </h1>
+        <p className="text-yellow-300 text-xs font-bold tracking-wider font-mono bg-black/40 px-3 py-0.5 mt-1 border border-yellow-500/40 shadow-sm">
+          === EXECUTIVE DIGITAL PLATFORM & WEB OPERATIONS OS ===
+        </p>
       </div>
 
       {/* ========================================================= */}
@@ -202,8 +213,19 @@ export default function Home() {
             <div className="space-y-1.5 text-xs flex-1 flex flex-col min-h-0">
               <div className="flex justify-between items-center border-b border-purple-900 pb-1 font-mono shrink-0">
                 <span className="font-bold text-purple-900 text-[11px]">💬 AI Assistant</span>
-                <button onClick={() => setActiveWindow('home')} className="px-2 py-0.5 bg-gray-200 border text-[10px] font-bold">X</button>
+                <div className="flex gap-1">
+                  <button onClick={resetChat} className="px-1.5 py-0.5 bg-gray-200 border text-[9px] font-bold" title="Reset Chat">🔄</button>
+                  <button onClick={() => setActiveWindow('home')} className="px-2 py-0.5 bg-gray-200 border text-[10px] font-bold">X</button>
+                </div>
               </div>
+
+              {/* Prompt Pills Mobile */}
+              <div className="flex gap-1 overflow-x-auto pb-1 shrink-0 text-[9px]">
+                <button onClick={() => handleSendMessage("What is your e-commerce experience?")} className="bg-gray-200 border px-1.5 py-0.5 whitespace-nowrap text-black font-bold">🛒 E-commerce</button>
+                <button onClick={() => handleSendMessage("Tell me about your leadership experience.")} className="bg-gray-200 border px-1.5 py-0.5 whitespace-nowrap text-black font-bold">👥 Leadership</button>
+                <button onClick={() => handleSendMessage("What AI tools do you use?")} className="bg-gray-200 border px-1.5 py-0.5 whitespace-nowrap text-black font-bold">⚡ AI & Automation</button>
+              </div>
+
               <div className="flex-1 bg-black text-green-400 p-2.5 overflow-y-auto space-y-2 font-mono text-[10px] border border-gray-700 min-h-0">
                 {messages.map((m, idx) => (
                   <div key={idx} className={m.role === 'user' ? 'text-blue-300 text-right' : 'text-green-300'}>
@@ -215,10 +237,15 @@ export default function Home() {
                     )}
                   </div>
                 ))}
-                {isTyping && <div className="text-yellow-400">Consulting my background...</div>}
+                {isTyping && (
+                  <div className="text-yellow-400 flex items-center gap-1">
+                    <span>Consulting my background</span>
+                    <span className="animate-pulse">...</span>
+                  </div>
+                )}
                 <div ref={chatEndRef} />
               </div>
-              <form onSubmit={handleSendMessage} className="flex gap-1 shrink-0 pt-1">
+              <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-1 shrink-0 pt-1">
                 <input
                   type="text"
                   value={inputMessage}
@@ -281,6 +308,11 @@ export default function Home() {
                 <p className="text-[10px] text-gray-800">Shopify Liquid custom modules, predictive search, and subscription workflows.</p>
                 <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="text-blue-600 font-bold underline block text-[10px]">nfsports.com ↗</a>
               </div>
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
+                <div className="font-bold text-[#000080] text-[10px]">PHIL AI SaaS Platform</div>
+                <p className="text-[10px] text-gray-800">FastAPI integration, Swagger validation, n8n workflow automation & access governance.</p>
+                <a href="https://visionbridgelogistics.com" target="_blank" rel="noreferrer" className="text-blue-600 font-bold underline block text-[10px]">visionbridgelogistics.com ↗</a>
+              </div>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
             </div>
           )}
@@ -303,7 +335,7 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-50 p-2 border border-gray-300">
                   <div className="font-bold text-[#000080] text-[9px] mb-0.5">Operations</div>
-                  <p className="text-[9px] text-gray-800">GA4, GTM, Jira, Agile, E-commerce Operations.</p>
+                  <p className="text-[9px] text-gray-800">GA4, GTM, Jira, Agile, Email Deliverability, Web Ops.</p>
                 </div>
               </div>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
@@ -336,7 +368,7 @@ export default function Home() {
       {/* DESKTOP VIEW: WINDOWS 2000 RETRO OS                     */}
       {/* ========================================================= */}
       <div className="hidden sm:flex flex-col justify-between min-h-screen z-10">
-        <main className="flex-1 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto w-full">
+        <main className="flex-1 p-6 flex flex-col items-center justify-center max-w-5xl mx-auto w-full pt-16">
           
           <div className="w-full grid grid-cols-6 gap-3 mb-4 px-1">
             <button onClick={() => setActiveWindow('ai_chat')} className="flex flex-col items-center p-2 bg-[#c0c0c0] hover:bg-gray-300 border-2 border-t-white border-l-white border-r-[#404040] border-b-[#404040] cursor-pointer col-span-1 shadow-md active:border-t-[#404040] active:border-l-[#404040] active:border-r-white active:border-b-white">
@@ -384,7 +416,18 @@ export default function Home() {
                 <div className="space-y-4 font-mono flex flex-col h-[520px]">
                   <div className="flex justify-between items-center border-b border-black pb-2">
                     <h2 className="font-extrabold text-sm text-purple-900">💬 AI Assistant (Interactive Knowledge Base)</h2>
-                    <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close [X]</button>
+                    <div className="flex gap-2">
+                      <button onClick={resetChat} className="px-2.5 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono hover:bg-gray-300" title="Reset conversation">🔄 Reset Chat</button>
+                      <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono hover:bg-gray-300">Close [X]</button>
+                    </div>
+                  </div>
+
+                  {/* Prompt Pills Desktop */}
+                  <div className="flex gap-2 shrink-0 text-xs">
+                    <span className="text-gray-600 font-bold self-center">Quick Ask:</span>
+                    <button onClick={() => handleSendMessage("What is your e-commerce and multi-site architecture experience?")} className="px-2.5 py-1 bg-gray-100 border border-gray-400 hover:bg-gray-200 text-black font-bold text-xs">🛒 E-Commerce & CMS</button>
+                    <button onClick={() => handleSendMessage("How do you manage cross-functional teams and Agile workflows?")} className="px-2.5 py-1 bg-gray-100 border border-gray-400 hover:bg-gray-200 text-black font-bold text-xs">👥 Leadership & Agile</button>
+                    <button onClick={() => handleSendMessage("Tell me about your AI automation and FastAPI/n8n projects.")} className="px-2.5 py-1 bg-gray-100 border border-gray-400 hover:bg-gray-200 text-black font-bold text-xs">⚡ AI & Automations</button>
                   </div>
                   
                   <div className="flex-1 bg-black text-green-400 p-4 overflow-y-auto space-y-3 text-xs border-2 border-inset border-gray-600 shadow-inner">
@@ -398,11 +441,16 @@ export default function Home() {
                         )}
                       </div>
                     ))}
-                    {isTyping && <div className="text-yellow-400">Consulting my professional background...</div>}
+                    {isTyping && (
+                      <div className="text-yellow-400 flex items-center gap-1.5">
+                        <span>Consulting my professional background</span>
+                        <span className="animate-pulse font-bold">...</span>
+                      </div>
+                    )}
                     <div ref={chatEndRef} />
                   </div>
 
-                  <form onSubmit={handleSendMessage} className="flex gap-2">
+                  <form onSubmit={(e) => { e.preventDefault(); handleSendMessage(); }} className="flex gap-2">
                     <input
                       type="text"
                       value={inputMessage}
@@ -499,31 +547,47 @@ export default function Home() {
                     <h2 className="font-extrabold text-sm text-[#000080]">🏢 Work Experience & Leadership</h2>
                     <button onClick={() => setActiveWindow('home')} className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold font-mono">Close</button>
                   </div>
-                  <div className="space-y-3 text-sm">
-                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
-                      <div className="font-bold text-[#000080]">Web Platform & Digital Operations Consultant (Oct 2025–Present)</div>
-                      <p className="text-gray-800 text-xs">
-                        Providing ongoing consulting services to U.S.-based organizations across web platforms, e-commerce, automation, and digital operations. Direct technical delivery and governance for PHIL (multi-tenant AI SaaS platform at 201 Digital Group) managing GitHub, AWS, access controls, n8n automation, frontend Bricks/WordPress/FastAPI, and Swagger validation. Developed custom Shopify Liquid features, responsive landing pages, and subscription-flow optimization at NF Sports.
-                      </p>
+                  <div className="space-y-4 text-xs">
+                    
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1.5">
+                      <div className="font-bold text-[#000080] text-sm">Web Platform & Digital Operations Consultant (Oct 2025–Present)</div>
+                      <p className="text-gray-700 italic">Technical Consulting & Digital Operations</p>
+                      <ul className="list-disc pl-4 space-y-1 text-gray-800">
+                        <li>Providing ongoing consulting services to U.S.-based organizations across web platforms, e-commerce, automation, and digital operations.</li>
+                        <li>Direct technical delivery and governance for PHIL (multi-tenant AI SaaS platform at 201 Digital Group) managing GitHub, AWS, access controls, n8n automation, frontend Bricks/WordPress/FastAPI, and Swagger validation.</li>
+                        <li>Developed custom Shopify Liquid features, responsive landing pages, and subscription-flow optimization at NF Sports.</li>
+                      </ul>
                     </div>
-                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
-                      <div className="font-bold text-[#000080]">Web Platform Manager — USA Tile and Marble, Miami, FL (Jan 2021–Jul 2025)</div>
-                      <p className="text-gray-800 text-xs">
-                        Owned and optimized multi-site WooCommerce ecosystems supporting multiple brands with shared inventory across online and physical showrooms. Engineered custom square-feet (SF) to box calculators on product pages carrying values through cart (cart.php), checkout, and confirmation emails. Built centralized Rosetta Stone database for product data, SKUs, and SEO metadata. Managed GA4, Google Ads, Merchant Center feeds, and SpeedSize Core Web Vitals optimization.
-                      </p>
+
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1.5">
+                      <div className="font-bold text-[#000080] text-sm">Web Platform Manager — USA Tile and Marble, Miami, FL (Jan 2021–Jul 2025)</div>
+                      <ul className="list-disc pl-4 space-y-1 text-gray-800">
+                        <li>Owned and optimized multi-site WooCommerce ecosystems supporting multiple brands with shared inventory across online and physical showrooms.</li>
+                        <li>Engineered custom square-feet (SF) to box calculators on product pages carrying values through cart (cart.php), checkout, and confirmation emails.</li>
+                        <li>Built centralized Rosetta Stone database for product data, SKUs, and SEO metadata.</li>
+                        <li>Managed GA4, Google Ads, Merchant Center feeds, and SpeedSize Core Web Vitals optimization.</li>
+                      </ul>
                     </div>
-                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
-                      <div className="font-bold text-[#000080]">WordPress Lead Developer — Chicago Code Monkeys, Chicago, IL (Jan 2013–Dec 2020)</div>
-                      <p className="text-gray-800 text-xs">
-                        Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira Agile workflows, CRM integrations, and reliable production launches.
-                      </p>
+
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1.5">
+                      <div className="font-bold text-[#000080] text-sm">WordPress Lead Developer — Chicago Code Monkeys, Chicago, IL (Jan 2013–Dec 2020)</div>
+                      <ul className="list-disc pl-4 space-y-1 text-gray-800">
+                        <li>Led distributed developer teams across South America for concurrent WordPress and WooCommerce projects.</li>
+                        <li>Translated complex client requirements into implementation plans and coordinated delivery through Jira and Agile workflows.</li>
+                        <li>Resolved production issues across client platforms, supporting reliable launches and ongoing operations.</li>
+                        <li>Built CRM and form integrations connecting customer-facing experiences with internal business workflows.</li>
+                      </ul>
                     </div>
-                    <div className="bg-[#f9f9f9] p-3 border border-gray-300">
-                      <div className="font-bold text-[#000080]">Email Campaign Manager — STEdb Tech, Royal Palm Beach, FL (Aug 2006–Dec 2012)</div>
-                      <p className="text-gray-800 text-xs">
-                        Managed end-to-end email campaign operations using a proprietary DBM platform, overseeing campaign builders and HTML quality assurance (QA). Directed technical infrastructure, IP whitelisting, feedback loops, server acquisition, and SPF/DKIM configurations. Served as the core technical liaison connecting stakeholders, international developers in Ukraine/India, and major ISPs to ensure high inbox placement.
-                      </p>
+
+                    <div className="bg-[#f9f9f9] p-3 border border-gray-300 space-y-1.5">
+                      <div className="font-bold text-[#000080] text-sm">Email Campaign Manager — STEdb Tech, Royal Palm Beach, FL (Aug 2006–Dec 2012)</div>
+                      <ul className="list-disc pl-4 space-y-1 text-gray-800">
+                        <li>Managed end-to-end email campaign operations using a proprietary DBM platform, overseeing campaign builders, HTML quality assurance (QA), and workflow execution.</li>
+                        <li>Directed technical infrastructure and deliverability initiatives, handling IP whitelisting, feedback loops, server acquisition, and SPF/DKIM configurations to ensure high inbox placement.</li>
+                        <li>Served as the technical liaison between stakeholders, international developers (Ukraine, India), and major ISPs (AOL, Yahoo, United Online) to resolve platform issues and optimize broadcasting performance.</li>
+                      </ul>
                     </div>
+
                   </div>
                   <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
                 </div>
@@ -545,7 +609,7 @@ export default function Home() {
                       <a href="https://nfsports.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold shrink-0">Visit ↗</a>
                     </div>
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300 flex justify-between items-center">
-                      <div><div className="font-bold text-[#000080]">PHIL AI SaaS Platform</div><p className="text-gray-800 text-xs">FastAPI backend integration, Swagger validation & n8n workflow automation.</p></div>
+                      <div><div className="font-bold text-[#000080]">PHIL AI SaaS Platform (201 Digital Group)</div><p className="text-gray-800 text-xs">FastAPI backend integration, Swagger validation, n8n workflow automation & access governance.</p></div>
                       <a href="https://visionbridgelogistics.com" target="_blank" rel="noreferrer" className="px-2 py-1 bg-[#c0c0c0] border text-xs font-bold shrink-0">Visit ↗</a>
                     </div>
                   </div>
@@ -574,7 +638,7 @@ export default function Home() {
                     </div>
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300">
                       <div className="font-bold text-[#000080] mb-1 text-xs">Operations & Analytics</div>
-                      <p className="text-gray-800 text-xs">Google Analytics 4, Google Tag Manager, Jira, Agile, Web Ops.</p>
+                      <p className="text-gray-800 text-xs">Google Analytics 4, Google Tag Manager, Jira, Agile, Email Deliverability, Web Ops.</p>
                     </div>
                   </div>
                   <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
