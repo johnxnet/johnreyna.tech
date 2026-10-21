@@ -273,24 +273,46 @@ export default function Home() {
           )}
 
           {activeWindow === 'experience' && (
-            <div className="space-y-2 text-xs">
-              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🏢 Work Experience</div>
-              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
-                <div className="font-bold text-[#000080] text-[10px]">Web Platform & Digital Operations Consultant (2025–Present)</div>
-                <p className="text-[10px] text-gray-800">Consulting for U.S. organizations. Technical delivery and governance for PHIL (AI SaaS at 201 Digital Group) managing GitHub, AWS, n8n automation, and Bricks/FastAPI. Shopify custom features at NF Sports.</p>
+            <div className="space-y-3 text-xs">
+              <div className="font-bold text-blue-900 border-b pb-1 font-mono">🏢 Work Experience & Leadership</div>
+              
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080] text-[10px]">Web Platform & Digital Operations Consultant (Oct 2025–Present)</div>
+                <ul className="list-disc pl-3 space-y-0.5 text-[9px] text-gray-800">
+                  <li>Providing ongoing consulting services across web platforms, e-commerce, automation, and digital operations.</li>
+                  <li>Direct technical delivery and governance for PHIL (multi-tenant AI SaaS) managing GitHub, AWS, n8n automation, Bricks/WordPress/FastAPI, and Swagger validation.</li>
+                  <li>Developed custom Shopify Liquid features, responsive landing pages, and subscription-flow optimization at NF Sports.</li>
+                </ul>
               </div>
-              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
-                <div className="font-bold text-[#000080] text-[10px]">Web Platform Manager — USA Tile & Marble (2021–2025)</div>
-                <p className="text-[10px] text-gray-800">Owned multi-site WooCommerce ecosystems, custom SF-to-box calculators, Rosetta Stone database, GA4, and SpeedSize optimization.</p>
+
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080] text-[10px]">Web Platform Manager — USA Tile and Marble (Jan 2021–Jul 2025)</div>
+                <ul className="list-disc pl-3 space-y-0.5 text-[9px] text-gray-800">
+                  <li>Owned and optimized multi-site WooCommerce ecosystems supporting multiple brands with shared inventory.</li>
+                  <li>Engineered custom square-feet (SF) to box calculators on product pages carrying values through cart and checkout.</li>
+                  <li>Built centralized Rosetta Stone database for product data, SKUs, and SEO metadata.</li>
+                  <li>Managed GA4, Google Ads, Merchant Center feeds, and SpeedSize Core Web Vitals optimization.</li>
+                </ul>
               </div>
-              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
-                <div className="font-bold text-[#000080] text-[10px]">WordPress Lead Dev — Chicago Code Monkeys (2013–2020)</div>
-                <p className="text-[10px] text-gray-800">Led distributed developer teams across South America for concurrent WordPress/WooCommerce projects via Jira Agile.</p>
+
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080] text-[10px]">WordPress Lead Developer — Chicago Code Monkeys (Jan 2013–Dec 2020)</div>
+                <ul className="list-disc pl-3 space-y-0.5 text-[9px] text-gray-800">
+                  <li>Led distributed developer teams across South America for concurrent WordPress and WooCommerce projects.</li>
+                  <li>Translated complex client requirements into implementation plans and coordinated delivery through Jira and Agile workflows.</li>
+                  <li>Resolved production issues across client platforms, supporting reliable launches and ongoing operations.</li>
+                </ul>
               </div>
-              <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
-                <div className="font-bold text-[#000080] text-[10px]">Email Campaign Manager — STEdb Tech (2006–2012)</div>
-                <p className="text-[10px] text-gray-800">Managed end-to-end email campaign operations, DBM platform, QA, infrastructure, deliverability, and cross-functional global coordination.</p>
+
+              <div className="bg-gray-50 p-2 border border-gray-300 space-y-1">
+                <div className="font-bold text-[#000080] text-[10px]">Email Campaign Manager — STEdb Tech (Aug 2006–Dec 2012)</div>
+                <ul className="list-disc pl-3 space-y-0.5 text-[9px] text-gray-800">
+                  <li>Managed end-to-end email campaign operations using a proprietary DBM platform, overseeing campaign builders and QA.</li>
+                  <li>Directed technical infrastructure and deliverability initiatives, handling IP whitelisting, feedback loops, server acquisition, and SPF/DKIM.</li>
+                  <li>Served as technical liaison between stakeholders, international developers, and major ISPs to ensure high inbox placement.</li>
+                </ul>
               </div>
+
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
             </div>
           )}
@@ -300,7 +322,7 @@ export default function Home() {
               <div className="font-bold text-blue-900 border-b pb-1 font-mono">🚀 Case Studies & E-Commerce</div>
               <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
                 <div className="font-bold text-[#000080] text-[10px]">USA Tile & Marble</div>
-                <p className="text-[10px] text-gray-800">Multi-brand WooCommerce architecture, custom box calculators & Rosetta Stone data.</p>
+                <p className="text-[10px] text-gray-800">Multi-brand WooCommerce architecture, SF box calculator, custom cart/checkout hooks, ACF, WP Sheet Editor & Rosetta Stone data architecture.</p>
                 <a href="https://itilemosaic.com" target="_blank" rel="noreferrer" className="text-blue-600 font-bold underline block text-[10px]">itilemosaic.com ↗</a>
               </div>
               <div className="bg-gray-50 p-2 border border-gray-300 space-y-0.5">
@@ -323,7 +345,7 @@ export default function Home() {
               <div className="grid grid-cols-2 gap-1.5">
                 <div className="bg-gray-50 p-1.5 border border-gray-300">
                   <div className="font-bold text-[#000080] text-[9px] mb-0.5">Platforms & CMS</div>
-                  <p className="text-[9px] text-gray-800">WordPress, WooCommerce, Shopify Liquid, Bricks.</p>
+                  <p className="text-[9px] text-gray-800">WordPress, WooCommerce, Shopify Liquid, Bricks, CMS Governance.</p>
                 </div>
                 <div className="bg-gray-50 p-1.5 border border-gray-300">
                   <div className="font-bold text-[#000080] text-[9px] mb-0.5">Development</div>
@@ -331,11 +353,11 @@ export default function Home() {
                 </div>
                 <div className="bg-gray-50 p-1.5 border border-gray-300">
                   <div className="font-bold text-[#000080] text-[9px] mb-0.5">Automation & QA</div>
-                  <p className="text-[9px] text-gray-800">n8n, Swagger, Git, GitHub, QA, ACF.</p>
+                  <p className="text-[9px] text-gray-800">n8n, Swagger, Git, GitHub, Quality Assurance (QA), ACF.</p>
                 </div>
                 <div className="bg-gray-50 p-2 border border-gray-300">
-                  <div className="font-bold text-[#000080] text-[9px] mb-0.5">Operations</div>
-                  <p className="text-[9px] text-gray-800">GA4, GTM, Jira, Agile, Email Deliverability, Web Ops.</p>
+                  <div className="font-bold text-[#000080] text-[9px] mb-0.5">Operations & Disney Profile</div>
+                  <p className="text-[9px] text-gray-800">GA4, GTM, Jira, Agile/Scrum, Email Deliverability, Vendor & ISP Relations, Web Ops.</p>
                 </div>
               </div>
               <button onClick={() => setActiveWindow('home')} className="w-full mt-1 p-1.5 bg-gray-200 text-black font-bold border border-black font-mono">← Back to Menu</button>
@@ -626,7 +648,7 @@ export default function Home() {
                   <div className="grid grid-cols-2 gap-3">
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300">
                       <div className="font-bold text-[#000080] mb-1 text-xs">Platforms & CMS</div>
-                      <p className="text-gray-800 text-xs">WordPress, WooCommerce, Shopify Liquid, Bricks Builder.</p>
+                      <p className="text-gray-800 text-xs">WordPress, WooCommerce, Shopify Liquid, Bricks Builder, CMS Governance.</p>
                     </div>
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300">
                       <div className="font-bold text-[#000080] mb-1 text-xs">Development & Languages</div>
@@ -634,11 +656,11 @@ export default function Home() {
                     </div>
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300">
                       <div className="font-bold text-[#000080] mb-1 text-xs">Automation & QA</div>
-                      <p className="text-gray-800 text-xs">n8n, Swagger, Git, GitHub, Quality Assurance, ACF.</p>
+                      <p className="text-gray-800 text-xs">n8n, Swagger, Git, GitHub, Quality Assurance (QA), ACF.</p>
                     </div>
                     <div className="bg-[#f9f9f9] p-3 border border-gray-300">
-                      <div className="font-bold text-[#000080] mb-1 text-xs">Operations & Analytics</div>
-                      <p className="text-gray-800 text-xs">Google Analytics 4, Google Tag Manager, Jira, Agile, Email Deliverability, Web Ops.</p>
+                      <div className="font-bold text-[#000080] mb-1 text-xs">Operations & Disney Profile</div>
+                      <p className="text-gray-800 text-xs">GA4, GTM, Jira, Agile/Scrum, Email Deliverability, Vendor & ISP Relations, Web Ops.</p>
                     </div>
                   </div>
                   <div className="text-center pt-2"><button onClick={() => setActiveWindow('home')} className="px-4 py-1.5 bg-[#c0c0c0] border-2 text-xs font-bold font-mono">&lt;&lt; Back</button></div>
