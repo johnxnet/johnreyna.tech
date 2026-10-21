@@ -91,6 +91,14 @@ export default function Home() {
     setInputMessage('')
     setIsTyping(true)
 
+// --- AGREGAR ESTE BLOQUE PARA RASTREAR EL CHAT EN GA4 ---
+    if (typeof window !== 'undefined' && (window as any).gtag) {
+      (window as any).gtag('event', 'ai_chat_interaction', {
+        event_category: 'Engagement',
+        event_label: 'Recruiter or user queried AI Assistant',
+      });
+    }
+
     try {
       const res = await fetch('/api/chat', {
         method: 'POST',
